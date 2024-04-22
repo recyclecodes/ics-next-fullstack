@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 
-export const getVerficationTokenByToken = async (token: string) => {
+export const getVerificationTokenByToken = async (token: string) => {
   try {
     const verificationToken = await prisma.verificationToken.findUnique({
       where: { token },
@@ -12,7 +12,7 @@ export const getVerficationTokenByToken = async (token: string) => {
   }
 };
 
-export const getVerficationTokenByEmail = async (email: string) => {
+export const getVerificationTokenByEmail = async (email: string) => {
   try {
     const verificationToken = await prisma.verificationToken.findFirst({
       where: { email },

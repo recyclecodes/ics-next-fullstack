@@ -21,6 +21,7 @@ import { FormError } from '@/components/form-error';
 import { FormSuccess } from '@/components/form-success';
 import { login } from '@/actions/login';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 export const LoginForm = () => {
   const searchParams = useSearchParams();
@@ -30,7 +31,7 @@ export const LoginForm = () => {
       : '';
 
   const [error, setError] = useState<string | undefined>('');
-  const [success, setSucess] = useState<string | undefined>('');
+  const [success, setSuccess] = useState<string | undefined>('');
 
   const [isPending, startTransition] = useTransition();
 
@@ -44,12 +45,12 @@ export const LoginForm = () => {
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     setError('');
-    setSucess('');
+    setSuccess('');
 
     startTransition(() => {
       login(values).then((data) => {
-        setError(data.error);
-        setSucess(data.success);
+        setError(data?.error);
+        setSuccess(data?.success);
       });
     });
   };
@@ -96,6 +97,14 @@ export const LoginForm = () => {
                       type="password"
                     />
                   </FormControl>
+                  <Button
+                    size="sm"
+                    variant="link"
+                    asChild
+                    className="px-0 font-normal"
+                  >
+                    <Link href="/auth/reset">Forgot password?</Link>
+                  </Button>
                   <FormMessage />
                 </FormItem>
               )}

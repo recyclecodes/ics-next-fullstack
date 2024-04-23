@@ -4,6 +4,7 @@ import NextAuth from 'next-auth';
 import authConfig from '@/auth.config';
 import { prisma } from '@/lib/prisma';
 import { getUserById } from '@/data/user';
+import { getTwoFactorConfirmationByUserId } from '@/data/two-factor-confirmation';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
@@ -26,6 +27,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const existingUser = await getUserById(user.id);
 
         if (!existingUser?.emailVerified) return false;
+
+        if (existingUser.isTwoFactorEnabled) {
+          const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
+            existingUser.id
+          );
+
+          // console.log({ twoFactorConfirmation });
+
+          if (!twoFactorConfirmation) return false;
+
+          await prisma.twoFactorConfirmation.deleteMany({
+            where: { id: twoFactorConfirmation.id },
+          });
+        }
       }
 
       return true;

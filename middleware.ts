@@ -18,6 +18,9 @@ export default auth((req) => {
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
+
+  //The if statements below returns a null or undefined, resolving the type mismatch
+
   if (isApiAuthRoute) {
     return;
   }

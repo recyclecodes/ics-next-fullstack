@@ -1,21 +1,18 @@
 'use client';
 
 import { useCurrentUser } from '@/hooks/use-current-user';
-import { logout } from '@/actions/logout';
+import { UserButton } from '@/components/auth/user-button';
+import { UserInfo } from '../_components/user-info';
 
 const SettingsPage = () => {
   const user = useCurrentUser();
 
-  const onClick = () => {
-    logout();
-  };
-
   return (
     <div>
       {JSON.stringify(user)}
-      <button onClick={onClick} type="submit">
-        Sign out
-      </button>
+      <p>{user?.name}</p>
+      <UserButton />
+      <UserInfo label={user?.email} user={user} />
     </div>
   );
 };

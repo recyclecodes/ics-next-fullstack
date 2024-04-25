@@ -6,7 +6,12 @@ import { prisma } from '@/lib/prisma';
 import { getUserById } from '@/data/user';
 import { getTwoFactorConfirmationByUserId } from '@/data/two-factor-confirmation';
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+export const {
+  handlers: { GET, POST },
+  auth,
+  signIn,
+  signOut,
+} = NextAuth({
   pages: {
     signIn: '/auth/login',
     error: 'auth/error',

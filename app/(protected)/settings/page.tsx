@@ -9,10 +9,10 @@ const SettingsPage = () => {
 
   return (
     <div>
-      {JSON.stringify(user)}
+      {/* {JSON.stringify(user)} */}
       <p>{user?.name}</p>
       <UserButton />
-      <UserInfo label={user?.email} user={user} />
+      {/* <UserInfo label={user?.email} user={user} /> */}
     </div>
   );
 };

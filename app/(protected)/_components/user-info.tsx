@@ -1,17 +1,25 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { ExtendedUser } from '@/next-auth';
 import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { FaUser } from 'react-icons/fa';
 
 interface UserInfoProps {
   user?: ExtendedUser;
-  label: string | undefined | null;
 }
 
-export const UserInfo = ({ user, label }: UserInfoProps) => {
+export const UserInfo = ({ user }: UserInfoProps) => {
   return (
-    <Card className="w-[600px] shadow-md">
+    <Card className="w-full shadow-md">
       <CardHeader>
-        <p className="text-2xl font-semibold">{label}</p>
+        <div className="flex justify-center -mt-20">
+          <Avatar className='h-28 w-28'>
+            <AvatarImage src={user?.image || ''} />
+            <AvatarFallback className="bg-primary ">
+              <FaUser className="text-primary-foreground w-4 h-4" />
+            </AvatarFallback>
+          </Avatar>
+        </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">

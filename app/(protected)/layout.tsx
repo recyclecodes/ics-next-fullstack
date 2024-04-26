@@ -1,4 +1,3 @@
-import { PiSlackLogoBold } from 'react-icons/pi';
 
 import { UserButton } from '@/components/auth/user-button';
 import MobileNav from './_components/mobile-nav';

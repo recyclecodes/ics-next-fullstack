@@ -32,3 +32,20 @@ export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
     html: `<p>Your 2FA Code: ${token}</p>`,
   });
 };
+
+export const sendVerificationEmailWithPassword = async (
+  email: string,
+  password: string,
+  token: string
+) => {
+  const confirmLink = `http://localhost:3001/auth/login`;
+  await resend.emails.send({
+    from: 'mail@gaserojales.tech',
+    to: email,
+    subject: 'Account created',
+    html: `<p>Click <a href="${confirmLink}">here</a> to login and confirm account.</p>
+    <p>Please login using the following credentials:</p>
+    <p>Your email: ${email}</p>
+    <p>Your password: ${password}</p>`,
+  });
+};

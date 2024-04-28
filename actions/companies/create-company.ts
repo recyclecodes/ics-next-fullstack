@@ -1,8 +1,6 @@
 'use server';
 
 import { CompanySchema } from '@/schemas';
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { getCompanyByName } from '@/data/company';
@@ -29,6 +27,7 @@ export const createCompany = async (values: z.infer<typeof CompanySchema>) => {
   });
 
   return { success: 'Created company successfully' };
+  
 };
 
 // export async function createCompany(formData: FormData): Promise<State> {

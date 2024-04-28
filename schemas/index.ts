@@ -32,3 +32,14 @@ export const CompanySchema = z.object({
   name: z.string().min(1, { message: 'Company name is required' }),
   image: z.string().min(1, { message: 'Company logo is required' }),
 });
+
+export const UserSchema =  z.object({
+  companyId: z.string().min(1, {message: 'Please select a company'}),
+  email: z.string().email({
+    message: 'Email is required!',
+  }),
+  password: z.optional(z.string()),
+  name: z.string().min(1, { message: 'Name is required' }),
+  image: z.string().min(1, {message: 'User image is required'}),
+  role: z.enum(['ADMIN', 'USER']).default('USER'),
+})

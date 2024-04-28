@@ -7,10 +7,15 @@ import { prisma } from '@/lib/prisma';
 import { LoginSchema } from '@/schemas';
 import { signIn } from '@/auth';
 import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
-import { sendVerificationEmail, sendTwoFactorTokenEmail } from '@/lib/mail';
+import {
+  sendVerificationEmail,
+  sendTwoFactorTokenEmail,
+  sendVerificationEmailWithPassword,
+} from '@/lib/mail';
 import {
   generateVerificationToken,
   generateTwoFactorToken,
+  generateVerificationTokenWithPassword,
 } from '@/lib/tokens';
 import { getUserByEmail } from '@/data/user';
 import { getTwoFactorTokenByEmail } from '@/data/two-factor-token';
@@ -37,6 +42,21 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     );
 
     await sendVerificationEmail(
+      verificationToken.email,
+      verificationToken.token
+    );
+
+    return { success: 'Confirmation email sent!' };
+  }
+
+  if (!existingUser.emailVerified) {
+    const verificationToken = await generateVerificationTokenWithPassword(
+      existingUser.password,
+      existingUser.email
+    );
+
+    await sendVerificationEmailWithPassword(
+      verificationToken.password || '',
       verificationToken.email,
       verificationToken.token
     );

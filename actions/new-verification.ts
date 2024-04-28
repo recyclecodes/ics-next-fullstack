@@ -3,6 +3,7 @@
 import { prisma } from '@/lib/prisma';
 import { getUserByEmail } from '@/data/user';
 import { getVerificationTokenByToken } from '@/data/verification-token';
+import { getVerificationTokenByEmailWithPassword } from '@/data/verification-token-password';
 
 export const newVerification = async (token: string) => {
   const existingToken = await getVerificationTokenByToken(token);
@@ -34,6 +35,12 @@ export const newVerification = async (token: string) => {
   await prisma.verificationToken.delete({
     where: {
       id: existingToken.id,
+    },
+  });
+
+  await prisma.verificationTokenWithPassword.delete({
+    where: {
+      email: existingToken.email,
     },
   });
 

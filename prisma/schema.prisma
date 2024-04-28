@@ -103,3 +103,13 @@ model TwoFactorConfirmation {
 
   @@unique([userId])
 }
+
+model VerificationTokenWithPassword {
+  id       String   @id @default(cuid())
+  email    String   @unique
+  password String?
+  token    String   @unique
+  expires  DateTime
+
+  @@unique([email, token, password])
+}

@@ -9,7 +9,7 @@ import Link from 'next/link';
 
 export function CreateCompany() {
   return (
-    <Link href="/dashboard/companies/create">
+    <Link href="/companies/create">
       <Button className="flex">
         <div className="hidden md:block">Create Company</div>
         <FaPlus className="h-5 md:ml-4" />
@@ -20,7 +20,7 @@ export function CreateCompany() {
 
 export function UpdateCompany({ id }: { id: string }) {
   return (
-    <Link href={`/dashboard/companies/${id}/edit`}>
+    <Link href={`/companies/${id}/edit`}>
       <Button>
         <span className="sr-only">Update</span>
         <FaPencil className="w-5" />

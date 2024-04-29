@@ -3,8 +3,8 @@ import { Metadata } from 'next';
 import { Suspense } from 'react';
 import Search from '@/app/(protected)/_components/search';
 import Pagination from '@/app/(protected)/_components/pagination';
-import UsersTable from '@/app/(protected)/dashboard/users/components/users-table';
-import { CreateUser } from './components/buttons';
+import UsersTable from '@/app/(protected)/users/components/users-table';
+import { CreateUser } from '@/app/(protected)/users/components/buttons';
 
 export const metadata: Metadata = {
   title: 'ICS | Users',

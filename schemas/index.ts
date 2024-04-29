@@ -36,13 +36,15 @@ export const CompanySchema = z.object({
 
 export type CompanyForm = z.infer<typeof CompanySchema>;
 
-export const UserSchema =  z.object({
-  companyId: z.string().min(1, {message: 'Please select a company'}),
+export const UserSchema = z.object({
+  companyId: z.string().min(1, { message: 'Please select a company' }),
   email: z.string().email({
     message: 'Email is required!',
   }),
   password: z.optional(z.string()),
   name: z.string().min(1, { message: 'Name is required' }),
-  image: z.string().min(1, {message: 'User image is required'}),
+  image: z.string().min(1, { message: 'User image is required' }),
   role: z.enum(['ADMIN', 'USER']),
-})
+});
+
+export type UserForm = z.infer<typeof UserSchema>;

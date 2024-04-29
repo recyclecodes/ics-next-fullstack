@@ -3,8 +3,8 @@ import { Metadata } from 'next';
 import { Suspense } from 'react';
 import Search from '@/app/(protected)/_components/search';
 import Pagination from '@/app/(protected)/_components/pagination';
-import CompaniesTable from '@/app/(protected)/dashboard/companies/components/companies-table';
-import { CreateCompany } from '@/app/(protected)/dashboard/companies/components/buttons';
+import CompaniesTable from '@/app/(protected)/companies/components/companies-table';
+import { CreateCompany } from '@/app/(protected)/companies/components/buttons';
 
 export const metadata: Metadata = {
   title: 'ICS | Companies',

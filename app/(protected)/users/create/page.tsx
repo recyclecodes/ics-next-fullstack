@@ -1,5 +1,5 @@
 import Breadcrumbs from '@/components/ui/breadcrumbs';
-import { CreateUserForm } from '@/app/(protected)/dashboard/users/components/create-user-form';
+import { CreateUserForm } from '@/app/(protected)/users/components/create-user-form';
 import { fetchCompanies } from '@/data/companies/fetch-companies';
 
 export default async function Page() {
@@ -9,7 +9,7 @@ export default async function Page() {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'Users', href: '/dashboard/users' },
+          { label: 'Users', href: '/users' },
           {
             label: 'Create User',
             href: '/users/create',

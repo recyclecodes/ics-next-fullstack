@@ -43,7 +43,7 @@ export async function updateCompany(
     };
   }
 
-  revalidatePath('/dashboard/companies');
+  revalidatePath('/companies');
 
-  redirect('/dashboard/companies');
+  redirect('/companies');
 }

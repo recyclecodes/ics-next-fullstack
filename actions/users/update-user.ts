@@ -1,55 +1,56 @@
-'use server'
+'use server';
 
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { UserSchema } from '@/schemas';
 import { prisma } from '@/lib/prisma';
-import { z } from 'zod';
+import { State } from '@/lib/definitions';
 
-export const updateUser = async (id: string, values: Omit<z.infer<typeof UserSchema>,'password'>) => {
-    
-  const validatedFields = UserSchema.safeParse(values);
+
+
+export async function updateUser(
+  id: string | undefined,
+  formData: FormData
+): Promise<State> {
+  const validatedFields = UserSchema.safeParse({
+    companyId: formData.get('companyId'),
+    email: formData.get('email'),
+    name: formData.get('name'),
+    image: formData.get('image'),
+  });
 
   if (!validatedFields.success) {
-    return { error: 
-        'Invalid fields!'
-     }; 
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create User.',
+    };
   }
 
-  const { companyId, email, name, image, role } = validatedFields.data;
+  const { companyId, email, name, image } = validatedFields.data;
 
-  const existingCompany = await prisma.company.findUnique({
-    where: {
-      id: companyId,
-    },
-  });
+  try {
+    console.log('Updating company with name:', name, 'and image:', image);
+    await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        companyId,
+        email,
+        name,
+        image,
+      },
+    });
 
-  if (!existingCompany) {
-    return { error: 'Company not found' };
+    console.log('User updated successfully');
+  } catch (error) {
+    console.error('Error updating user:', error);
+    return {
+      message: 'Database Error: Failed to Update User.',
+    };
   }
 
+  revalidatePath('/users');
 
-  const existingUser = await prisma.user.findUnique({
-    where: {
-      id: id,
-    },
-  });
-
-  if (!existingUser) {
-    return { error: 'User not found' };
-  }
-
-
-  await prisma.user.update({
-    where: {
-      id: id,
-    },
-    data: {
-      companyId,
-      email,
-      name,
-      image,
-      role,
-    },
-  });
-
-  return { success: 'User updated successfully' };
-};
+  redirect('/users');
+}

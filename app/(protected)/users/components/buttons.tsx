@@ -9,7 +9,7 @@ import Link from 'next/link';
 
 export function CreateUser() {
   return (
-    <Link href="/dashboard/users/create">
+    <Link href="/users/create">
       <Button className="flex">
         <div className="hidden md:block">Create User</div>
         <FaPlus className="h-5 md:ml-4" />

@@ -2,6 +2,8 @@ import Image from 'next/image';
 // import { Deleteuser, Updateuser, Viewuser } from './buttons';
 import { formatDateToLocal } from '@/lib/utils';
 import { fetchFilteredUsers } from '@/data/users/fetch-filtered-users';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 export default async function UsersTable({
   query,
@@ -24,7 +26,7 @@ export default async function UsersTable({
               >
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
-                    <div className="mb-2 flex items-center">
+                    <div className="mb-2 flex items-center justify-between">
                       <Image
                         src={user.image ?? '/fallback/fallback.png'}
                         className="mr-2 rounded-full"
@@ -36,6 +38,11 @@ export default async function UsersTable({
                     </div>
                     <p className="text-xs text-gray-500">{user.id}</p>
                   </div>
+                  <Badge className='inline-flex items-center text-xs'
+                    variant={user?.emailVerified ? 'success' : 'destructive'}
+                  >
+                    {user?.emailVerified ? 'Verified' : 'Pending'}
+                  </Badge>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
@@ -45,6 +52,7 @@ export default async function UsersTable({
                     </p>
                   </div>
                   <div className="flex justify-end gap-2">
+                    <Button>Button</Button>
                     {/* <Updateuser id={user.id} />
                     <Deleteuser id={user.id} />
                     <Viewuser id={user.id} /> */}
@@ -61,6 +69,12 @@ export default async function UsersTable({
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   User
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Role
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Verified
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Actions</span>
@@ -85,6 +99,14 @@ export default async function UsersTable({
                       />
                       <p>{user.name}</p>
                     </div>
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">{user.role}</td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                  <Badge className='inline-flex items-center text-xs'
+                    variant={user?.emailVerified ? 'success' : 'destructive'}
+                  >
+                    {user?.emailVerified ? 'Verified' : 'Pending'}
+                  </Badge>
                   </td>
 
                   {/* <td className="whitespace-nowrap px-3 py-3">

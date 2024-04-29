@@ -1,42 +1,49 @@
+'use server';
+
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { CompanySchema } from '@/schemas';
 import { prisma } from '@/lib/prisma';
-import { z } from 'zod';
-import { getCompanyByName } from '@/data/company';
+import { State } from '@/lib/definitions';
 
-export const updateCompany = async (id: string, values: z.infer<typeof CompanySchema>) => {
-  const validatedFields = CompanySchema.safeParse(values);
+export async function updateCompany(
+  id: string | undefined,
+  formData: FormData
+): Promise<State> {
+  const validatedFields = CompanySchema.safeParse({
+    id: formData.get('id'),
+    name: formData.get('name'),
+    image: formData.get('image'),
+  });
 
   if (!validatedFields.success) {
-    return { error: 'Invalid fields!' };
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Update Company.',
+    };
   }
 
   const { name, image } = validatedFields.data;
 
-  const existingCompany = await prisma.company.findUnique({
-    where: {
-      id: id,
-    },
-  });
+  try {
+    console.log('Updating company with name:', name, 'and image:', image);
+    await prisma.company.update({
+      where: { id },
+      data: {
+        name,
+        image,
+      },
+    });
 
-  if (!existingCompany) {
-    return { error: 'Company not found' };
+    console.log('Company updated successfully');
+  } catch (error) {
+    console.error('Error updating company:', error);
+    return {
+      message: 'Database Error: Failed to Update Company.',
+    };
   }
 
-  const companyWithName = await getCompanyByName(name);
+  revalidatePath('/dashboard/companies');
 
-  if (companyWithName && companyWithName.id !== id) {
-    return { error: 'Company name already exists' };
-  }
-
-  await prisma.company.update({
-    where: {
-      id: id,
-    },
-    data: {
-      name,
-      image,
-    },
-  });
-
-  return { success: 'Updated company successfully' };
-};
+  redirect('/dashboard/companies');
+}

@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import Search from '@/app/(protected)/_components/search';
 import Pagination from '@/app/(protected)/_components/pagination';
 import UsersTable from '@/app/(protected)/dashboard/users/components/users-table';
+import { CreateUser } from './components/buttons';
 
 export const metadata: Metadata = {
   title: 'ICS | Users',
@@ -29,7 +30,7 @@ export default async function UsersPage({
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <Search placeholder="Search Users..." />
-        {/* <CreateUser /> */}
+        <CreateUser />
       </div>
       <Suspense key={query + currentPage} fallback={''}>
         <UsersTable query={query} currentPage={currentPage} />

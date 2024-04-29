@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import Search from '@/app/(protected)/_components/search';
 import Pagination from '@/app/(protected)/_components/pagination';
 import CompaniesTable from '@/app/(protected)/dashboard/companies/components/companies-table';
+import { CreateCompany } from '@/app/(protected)/dashboard/companies/components/buttons';
 
 export const metadata: Metadata = {
   title: 'ICS | Companies',
@@ -29,7 +30,7 @@ export default async function CompaniesPage({
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <Search placeholder="Search Companies..." />
-        {/* <CreateCompany /> */}
+        <CreateCompany />
       </div>
       <Suspense key={query + currentPage} fallback={''}>
         <CompaniesTable query={query} currentPage={currentPage} />

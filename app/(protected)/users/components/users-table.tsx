@@ -4,6 +4,7 @@ import { formatDateToLocal } from '@/lib/utils';
 import { fetchFilteredUsers } from '@/data/users/fetch-filtered-users';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { UpdateUser } from './buttons';
 
 export default async function UsersTable({
   query,
@@ -53,9 +54,9 @@ export default async function UsersTable({
                   </div>
                   <div className="flex justify-end gap-2">
                     <Button>Button</Button>
-                    {/* <Updateuser id={user.id} />
-                    <Deleteuser id={user.id} />
-                    <Viewuser id={user.id} /> */}
+                    <UpdateUser id={user.id} />
+                    {/* <Deleteuser id={user.id} /> */}
+                    {/* <Viewuser id={user.id} /> */}
                   </div>
                 </div>
               </div>
@@ -118,9 +119,9 @@ export default async function UsersTable({
                   </td> */}
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      {/* <Updateuser id={user.id} />
-                      <Deleteuser id={user.id} />
-                      <Viewuser id={user.id} /> */}
+                      <UpdateUser id={user.id} />
+                      {/* <Deleteuser id={user.id} /> */}
+                      {/* <Viewuser id={user.id} /> */}
                     </div>
                   </td>
                 </tr>

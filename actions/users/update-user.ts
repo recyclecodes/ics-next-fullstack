@@ -14,9 +14,10 @@ export async function updateUser(
 ): Promise<State> {
   const validatedFields = UserSchema.safeParse({
     companyId: formData.get('companyId'),
-    email: formData.get('email'),
+    email: formData.get('email') || null,
     name: formData.get('name'),
     image: formData.get('image'),
+    role: formData.get('role'),
   });
 
   if (!validatedFields.success) {
@@ -26,7 +27,7 @@ export async function updateUser(
     };
   }
 
-  const { companyId, email, name, image } = validatedFields.data;
+  const { companyId, email, name, image, role } = validatedFields.data;
 
   try {
     console.log('Updating company with name:', name, 'and image:', image);
@@ -39,6 +40,7 @@ export async function updateUser(
         email,
         name,
         image,
+        role,
       },
     });
 

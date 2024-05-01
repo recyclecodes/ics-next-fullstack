@@ -18,13 +18,13 @@ export function CreateUser() {
   );
 }
 
-// export function UpdateUser({ id }: { id: string }) {
-//   return (
-//     <Link href={`/dashboard/users/${id}/edit`}>
-//       <Button>
-//         <span className="sr-only">Update</span>
-//         <FaPencil className="w-5" />
-//       </Button>
-//     </Link>
-//   );
-// }
+export function UpdateUser({ id }: { id: string }) {
+  return (
+    <Link href={`/users/${id}/edit`}>
+      <Button>
+        <span className="sr-only">Update</span>
+        <FaPencil className="w-5" />
+      </Button>
+    </Link>
+  );
+}

@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { Company } from '@/lib/definitions';
+import { Company } from '@prisma/client';
 
 export async function fetchCompanies(): Promise<Company[]> {
   try {
@@ -12,6 +12,8 @@ export async function fetchCompanies(): Promise<Company[]> {
         name: true,
         image: true,
         createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
       },
       orderBy: {
         name: 'asc',

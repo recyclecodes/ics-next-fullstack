@@ -9,23 +9,21 @@ interface RoleGateProps {
   allowedRole: UserRole;
 }
 
-
 export const RoleGate = ({ children, allowedRole }: RoleGateProps) => {
   const role = useCurrentRole();
-  
+
   if (role !== allowedRole) {
-    return (
-      <div className='hidden'>
-        {children}
-      </div>
-    )
+    return null;
+    // return (
+    //   <FormError message='You are not allowed to view this page'/>
+    // )
   }
-  
+
   return <>{children}</>;
 };
 
 
-/**TODO: RENAME THIS COMPONENT TO GATE KEEPER & 
+/**TODO: RENAME THIS COMPONENT TO GATE KEEPER &
  * APPLY GATE FOR USERS NOT ASSIGNED TO A COMPANY
  * ADD 404 PAGE IF USERS ARE NOT ALLOWED
  */

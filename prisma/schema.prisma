@@ -20,13 +20,15 @@ enum UserRole {
 }
 
 model Company {
-  id        String    @id @default(cuid())
-  name      String    @unique
-  users     User[]    @relation("CompanyToUser")
-  image     String
-  deletedAt DateTime?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id               String     @id @default(cuid())
+  name             String     @unique
+  users            User[]     @relation("CompanyToUser")
+  image            String
+  deletedAt        DateTime?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  senderCompany    Transfer[] @relation("TransferFromCompany")
+  recipientCompany Transfer[] @relation("TransferToCompany")
 }
 
 model User {
@@ -45,6 +47,10 @@ model User {
   twoFactorConfirmation TwoFactorConfirmation?
   company               Company?               @relation("CompanyToUser", fields: [companyId], references: [id])
   companyId             String?
+  items                 Item[]                 @relation("UserToItem")
+  senderTransfer        Transfer[]             @relation("TransferFromSender")
+  recipientTransfer     Transfer[]             @relation("TransferToUser")
+  adminTransfer         Transfer[]             @relation("TransferApprovedByAdmin")
 
   @@map("users")
 }
@@ -112,4 +118,46 @@ model VerificationTokenWithPassword {
   expires  DateTime
 
   @@unique([email, token, password])
+}
+
+model Item {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  brand       String?
+  price       Float?
+  quantity    Float?
+  imageUrl    String?
+  userId      String?
+  user        User?     @relation("UserToItem", fields: [userId], references: [id], onDelete: Cascade)
+  transferId  String?
+  transfer    Transfer? @relation("ItemInTransfer", fields: [transferId], references: [id])
+  deleted     Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Transfer {
+  id                 String         @id @default(uuid())
+  senderId           String
+  sender             User           @relation("TransferFromSender", fields: [senderId], references: [id])
+  recipientId        String
+  recipient          User           @relation("TransferToUser", fields: [recipientId], references: [id])
+  adminId            String
+  admin              User           @relation("TransferApprovedByAdmin", fields: [adminId], references: [id])
+  senderCompanyId    String
+  senderCompany      Company        @relation("TransferFromCompany", fields: [senderCompanyId], references: [id])
+  recipientCompanyId String
+  recipientCompany   Company        @relation("TransferToCompany", fields: [recipientCompanyId], references: [id])
+  items              Item[]         @relation("ItemInTransfer")
+  status             TransferStatus @default(PENDING)
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+}
+
+enum TransferStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  ACCEPTED
 }

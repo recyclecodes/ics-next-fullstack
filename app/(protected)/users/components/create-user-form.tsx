@@ -32,6 +32,7 @@ import {
 } from '@/components/ui/select';
 import { Company } from '@/lib/definitions';
 import { createUser } from '@/actions/users/create-user';
+import Link from 'next/link';
 
 export const CreateUserForm = ({ companies }: { companies: Company[] }) => {
   const [error, setError] = useState<string | undefined>('');
@@ -193,9 +194,17 @@ export const CreateUserForm = ({ companies }: { companies: Company[] }) => {
           </div>
           <FormError message={error} />
           <FormSuccess message={success} />
-          <Button disabled={isPending} type="submit" className="w-full">
-            Submit
-          </Button>
+          <div className="mt-6 flex justify-end gap-4">
+            <Link
+              href="/users"
+              className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+            >
+              Cancel
+            </Link>
+            <Button disabled={isPending} type="submit">
+              Submit
+            </Button>
+          </div>
         </form>
       </Form>
     </>

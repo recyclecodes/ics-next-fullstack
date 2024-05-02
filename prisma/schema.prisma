@@ -127,7 +127,7 @@ model Item {
   brand       String?
   price       Float?
   quantity    Float?
-  imageUrl    String?
+  image       String?
   userId      String?
   user        User?     @relation("UserToItem", fields: [userId], references: [id], onDelete: Cascade)
   transferId  String?

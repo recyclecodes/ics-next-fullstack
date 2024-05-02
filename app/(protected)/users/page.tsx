@@ -25,7 +25,7 @@ export default async function UsersPage({
   const totalPages = await fetchUsersPages(query);
 
   return (
-    <PageGate allowedRole='ADMIN'>
+    
     <div className="w-full">
       <div className="flex w-full items-center justify-between">
         <h1 className="text-base">Users</h1>
@@ -41,6 +41,5 @@ export default async function UsersPage({
         <Pagination totalPages={totalPages} />
       </div>
     </div>
-    </PageGate>
   );
 }

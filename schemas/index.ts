@@ -84,20 +84,6 @@ export const ItemSchema = z.object({
   description: z.string().optional(),
   brand: z.string().min(1, { message: 'Item brand is required' }),
   price: z.number().positive('Price must be positive'),
-    // .string()
-    // .transform((val) => val.trim())
-    // .refine((val) => /^\d+(\.\d+)?$/.test(val), {
-    //   message: 'Price must be a valid number',
-    // })
-    // .transform((val) => parseFloat(val))
-    // .optional(),
   quantity: z.number().positive('Quantity must be positive'),
-    // .string()
-    // .transform((val) => val.trim())
-    // .refine((val) => /^\d+(\.\d+)?$/.test(val), {
-    //   message: 'Price must be a valid number',
-    // })
-    // .transform((val) => parseFloat(val))
-    // .optional(),
   userId: z.optional(z.string()),
 });

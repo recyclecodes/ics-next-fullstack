@@ -91,17 +91,13 @@ export const ItemSchema = z.object({
 
 export const TransferSchema = z.object({
   id: z.optional(z.string()),
-  senderCompanyId: z
-    .string()
-    .min(1, { message: 'Sender company is required.' }),
-  senderId: z.string().min(1, { message: 'Sender is required' }),
+  senderCompanyId: z.optional(z.string()),
+  senderId: z.optional(z.string()),
   image: z.string().min(1, { message: 'Item image is required' }),
-  recipientCompanyId: z
-    .string()
-    .min(1, { message: 'Recipient company is required' }),
-  recipientId: z.string().min(1, { message: 'Please select a recipeint' }),
-  adminId: z.string().min(1, { message: 'Admin is required' }),
-  items: z.string(ItemSchema),
+  recipientCompanyId: z.string().min(1, { message: 'Recipient company is required' }),
+  recipientId: z.string().min(1, { message: 'Please select a recipient' }),
+  adminId: z.optional(z.string()),
+  items: z.array(z.string()),
   status: z.enum([
     TransferStatus.ACCEPTED,
     TransferStatus.PENDING,
@@ -109,6 +105,8 @@ export const TransferSchema = z.object({
     TransferStatus.APPROVED,
   ]),
 });
+
+
 
 
 

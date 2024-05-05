@@ -38,7 +38,6 @@ import {
   getCurrentUserCompany,
   getUserItems,
 } from '@/data/user';
-import { Input } from '@/components/ui/input';
 
 export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
   const [selectedCompany, setSelectedCompany] = useState<string>('');
@@ -74,10 +73,10 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
   }, [selectedCompany]);
 
   useEffect(() => {
-    if (selectedUser) {
-      fetchUserItems(selectedUser);
+    if (senderId) {
+      fetchUserItems(senderId);
     }
-  }, [selectedUser]);
+  }, [senderId]);
 
   const fetchCurrentUserCompany = async (userId: string) => {
     try {
@@ -148,16 +147,43 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
       recipientId: '',
       recipientCompanyId: '',
       status: 'PENDING',
-      items: '',
+      items: [],
     },
   });
 
   const onSubmit = (values: z.infer<typeof TransferSchema>) => {
     setError('');
     setSuccess('');
-
+    console.log({ ...values });
+    console.log(senderCompanyId);
+  
+    if (!senderCompanyId || !adminId) {
+      setError('Sender company ID or admin ID is missing');
+      return;
+    }
+  
     startTransition(() => {
-      initiateTransfer({ ...values }).then((data) => {
+      // Filter selected items to include only those that exist in userItems
+      const validItems = userItems.filter(item =>
+        values.items.includes(item.id)
+      );
+  
+      if (validItems.length !== values.items.length) {
+        setError('One or more selected items do not exist');
+        return;
+      }
+  
+      // Create transfer with updated items array
+      initiateTransfer({
+        senderCompanyId,
+        senderId,
+        adminId,
+        image: form.getValues('image'),
+        recipientCompanyId: selectedCompany,
+        recipientId: selectedUser,
+        status: 'PENDING',
+        items: validItems.map(item => item.id), // Use the filtered list of valid items
+      }).then((data) => {
         setError(data?.errors);
         setSuccess(data?.success);
       });
@@ -175,10 +201,65 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
           <div className="space-y-4">
             <FormField
               control={form.control}
+              name="items"
+              render={({ field }) => (
+                <FormItem className="mb-4">
+                  <FormLabel>Choose Item to Transfer</FormLabel>
+                  <FormControl>
+                    <Select
+                      // onValueChange={(value) => {
+                      //   field.onChange(value);
+                      //   setSelectedUser(value);
+                      // }}
+                      onValueChange={(value) => field.onChange([value])} // Wrap the selected value in an array
+                      value={field.value[0] ?? ''} // Select the first item or provide a default value
+                      defaultValue={field.value[0] ?? ''}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue
+                          defaultValue={field.value}
+                          placeholder="Select an Item"
+                        />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Item</SelectLabel>
+                          {userItems.map((item) => (
+                            <SelectItem key={item.id} value={item.id}>
+                              {item.name}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Item Image</FormLabel>
+                  <FormControl>
+                    <ImageUpload
+                      value={field.value ? [field.value] : []}
+                      onChange={(url) => field.onChange(url)}
+                      onRemove={() => field.onChange('')}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="recipientCompanyId"
               render={({ field }) => (
                 <FormItem className="mb-4">
-                  <FormLabel>Choose Company</FormLabel>
+                  <FormLabel>Choose Recipient Company</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={(value) => {
@@ -215,7 +296,7 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
               name="recipientId"
               render={({ field }) => (
                 <FormItem className="mb-4">
-                  <FormLabel>Choose User</FormLabel>
+                  <FormLabel>Choose Recipient User</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={(value) => {
@@ -242,64 +323,6 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-              <FormField
-              control={form.control}
-              name="items"
-              render={({ field }) => (
-                <FormItem className="mb-4">
-                  <FormLabel>Choose Item</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setSelectedUser(value);
-                      }}
-                      value={field.value}
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue
-                          defaultValue={field.value}
-                          placeholder="Select a user"
-                        />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Item</SelectLabel>
-                          {userItems.map((item) => (
-                            <SelectItem key={item.id} value={item.id}>
-                              {item.name}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-
-            <FormField
-              control={form.control}
-              name="adminId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Admin Id</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      disabled={isPending}
-                      placeholder="Admin Id"
-                      type="text"
-                      value={adminId}
-                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

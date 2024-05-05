@@ -18,12 +18,12 @@ export default async function UsersTable({
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
+        <div className="rounded-lg bg-secondary p-2 md:pt-0">
           <div className="md:hidden">
             {users?.map((user) => (
               <div
                 key={user.id}
-                className="mb-2 w-full rounded-md bg-white p-4"
+                className="mb-2 w-full rounded-md bg-primary-foreground p-4"
               >
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
@@ -37,7 +37,7 @@ export default async function UsersTable({
                       />
                       <p>{user.name}</p>
                     </div>
-                    <p className="text-xs text-gray-500">{user.id}</p>
+                    <p className="text-xs text-gray-500">{user.email}</p>
                   </div>
                   <Badge className='inline-flex items-center text-xs'
                     variant={user?.emailVerified ? 'success' : 'destructive'}
@@ -53,7 +53,6 @@ export default async function UsersTable({
                     </p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <Button>Button</Button>
                     <UpdateUser id={user.id} />
                     {/* <Deleteuser id={user.id} /> */}
                     {/* <Viewuser id={user.id} /> */}

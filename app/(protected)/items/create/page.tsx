@@ -4,7 +4,7 @@ import { CreateItemForm } from '@/app/(protected)/items/components/create-item-f
 export default async function Page() {
   return (
     <main>
-      <Breadcrumbs
+      {/* <Breadcrumbs
         breadcrumbs={[
           { label: 'Items', href: '/items' },
           {
@@ -13,7 +13,7 @@ export default async function Page() {
             active: true,
           },
         ]}
-      />
+      /> */}
       <CreateItemForm />
     </main>
   );

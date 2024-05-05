@@ -9,8 +9,8 @@ interface HeadingProps {
   }) => {
     return ( 
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
-        <p className="text-sm text-muted-foreground">
+        <h2 className="text-xl font-bold tracking-tight">{title}</h2>
+        <p className="text-sm text-muted-foreground mb-8">
           {description}
         </p>
       </div>

@@ -4,6 +4,8 @@ import { AiOutlineMenuUnfold } from 'react-icons/ai';
 import { PiSlackLogoBold } from 'react-icons/pi';
 import { MdDashboard } from 'react-icons/md';
 import { PiBuildingsFill } from 'react-icons/pi';
+import { FaUsers } from "react-icons/fa";
+import { BsBoxFill } from "react-icons/bs";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -41,8 +43,14 @@ export function MainNav({
     {
       href: `/users`,
       label: 'SA Users',
-      icon: <PiBuildingsFill className="h-5 w-5 mr-5 text-primary" />,
+      icon: <FaUsers className="h-5 w-5 mr-5 text-primary" />,
       active: pathname === `/users`,
+    },
+    {
+      href: `/items`,
+      label: 'SA Items',
+      icon: <BsBoxFill className="h-5 w-5 mr-5 text-primary" />,
+      active: pathname === `/items`,
     },
   ];
   const adminRoutes = [
@@ -81,8 +89,14 @@ export function MainNav({
     {
       href: `/users`,
       label: 'User Users',
-      icon: <PiBuildingsFill className="h-5 w-5 mr-5 text-primary" />,
+      icon: <FaUsers className="h-5 w-5 mr-5 text-primary" />,
       active: pathname === `/users`,
+    },
+    {
+      href: `/items`,
+      label: 'User Items',
+      icon: <BsBoxFill className="h-5 w-5 mr-5 text-primary" />,
+      active: pathname === `/items`,
     },
   ];
 

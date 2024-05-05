@@ -1,4 +1,4 @@
-import { UserRole } from '@prisma/client';
+import { TransferStatus, UserRole } from '@prisma/client';
 import * as z from 'zod';
 
 export const LoginSchema = z.object({
@@ -73,6 +73,7 @@ export const UserSchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
   image: z.string().min(1, { message: 'User image is required' }),
   role: z.enum([UserRole.ADMIN, UserRole.USER, UserRole.SUPERADMIN]),
+  adminUserId: z.optional(z.string()),
 });
 
 export type UserForm = z.infer<typeof UserSchema>;
@@ -87,3 +88,44 @@ export const ItemSchema = z.object({
   quantity: z.number().positive('Quantity must be positive'),
   userId: z.optional(z.string()),
 });
+
+export const TransferSchema = z.object({
+  id: z.optional(z.string()),
+  senderCompanyId: z
+    .string()
+    .min(1, { message: 'Sender company is required.' }),
+  senderId: z.string().min(1, { message: 'Sender is required' }),
+  image: z.string().min(1, { message: 'Item image is required' }),
+  recipientCompanyId: z
+    .string()
+    .min(1, { message: 'Recipient company is required' }),
+  recipientId: z.string().min(1, { message: 'Please select a recipeint' }),
+  adminId: z.string().min(1, { message: 'Admin is required' }),
+  items: z.string(ItemSchema),
+  status: z.enum([
+    TransferStatus.ACCEPTED,
+    TransferStatus.PENDING,
+    TransferStatus.REJECTED,
+    TransferStatus.APPROVED,
+  ]),
+});
+
+
+
+
+ // price: z
+  //   .string()
+  //   .transform((val) => val.trim())
+  //   .refine((val) => /^\d+(\.\d+)?$/.test(val), {
+  //     message: 'Price must be a valid number',
+  //   })
+  //   .transform((val) => parseFloat(val))
+  //   .optional(),
+  // quantity: z
+  //   .string()
+  //   .transform((val) => val.trim())
+  //   .refine((val) => /^\d+(\.\d+)?$/.test(val), {
+  //     message: 'Price must be a valid number',
+  //   })
+  //   .transform((val) => parseFloat(val))
+  //   .optional(),

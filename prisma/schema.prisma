@@ -52,6 +52,10 @@ model User {
   recipientTransfer     Transfer[]             @relation("TransferToUser")
   adminTransfer         Transfer[]             @relation("TransferApprovedByAdmin")
 
+  // adminUser   User?   @relation("UserToAdmin", fields: [adminUserId], references: [id])
+  // adminUserId String?
+  // userUser    User[]  @relation("UserToAdmin")
+
   @@map("users")
 }
 
@@ -132,7 +136,7 @@ model Item {
   user        User?     @relation("UserToItem", fields: [userId], references: [id], onDelete: Cascade)
   transferId  String?
   transfer    Transfer? @relation("ItemInTransfer", fields: [transferId], references: [id])
- deletedAt             DateTime?
+  deletedAt   DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
@@ -140,6 +144,7 @@ model Item {
 model Transfer {
   id                 String         @id @default(uuid())
   senderId           String
+  image              String?
   sender             User           @relation("TransferFromSender", fields: [senderId], references: [id])
   recipientId        String
   recipient          User           @relation("TransferToUser", fields: [recipientId], references: [id])

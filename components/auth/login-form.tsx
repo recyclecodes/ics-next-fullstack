@@ -22,6 +22,7 @@ import { FormSuccess } from '@/components/form-success';
 import { login } from '@/actions/login';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { revalidatePath } from 'next/cache';
 
 export const LoginForm = () => {
   const searchParams = useSearchParams();

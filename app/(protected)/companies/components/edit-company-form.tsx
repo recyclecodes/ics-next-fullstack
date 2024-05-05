@@ -18,12 +18,10 @@ import { Input } from '@/components/ui/input';
 import { CompanyForm, CompanySchema } from '@/schemas';
 import ImageUpload from '@/components/ui/image-upload';
 import LoadingButton from '@/app/(protected)/_components/loading-button';
+import { Button } from '@/components/ui/button';
+import { Heading } from '@/components/ui/heading';
 
-export default function EditCompanyForm({
-  company,
-}: {
-  company: CompanyForm;
-}) {
+export default function EditCompanyForm({ company }: { company: CompanyForm }) {
   const form = useForm<CompanyForm>({
     resolver: zodResolver(CompanySchema),
     defaultValues: company,
@@ -62,6 +60,10 @@ export default function EditCompanyForm({
 
   return (
     <>
+      <Heading
+        title="Edit Company"
+        description="Modify company details"
+      />
       <Form {...form}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 w-full">
           <FormField
@@ -100,16 +102,18 @@ export default function EditCompanyForm({
               )}
             />
           </div>
-          <div className="mt-6 flex justify-end gap-4">
-            <Link
-              href="/companies"
-              className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+
+          <div className="mt-6 md:flex block justify-end gap-4 space-y-4">
+            <LoadingButton
+              type="submit"
+              loading={isSubmitting}
+              className="w-full"
             >
-              Cancel
-            </Link>
-            <LoadingButton type="submit" loading={isSubmitting}>
               Submit
             </LoadingButton>
+            <Button variant="secondary" className="w-full">
+              <Link href="/companies">Cancel</Link>
+            </Button>
           </div>
         </form>
       </Form>

@@ -22,6 +22,7 @@ import { Heading } from '@/components/ui/heading';
 import ImageUpload from '@/components/ui/image-upload';
 import { useCurrentUser } from '@/hooks/use-current-user';
 import { createItem } from '@/actions/items/create-item';
+import Link from 'next/link';
 
 export const CreateItemForm = () => {
   const [error, setError] = useState<string | undefined>('');
@@ -30,6 +31,7 @@ export const CreateItemForm = () => {
   const [isPending, startTransition] = useTransition();
 
   const user = useCurrentUser();
+  const userId = user?.id ?? '';
 
   const form = useForm<z.infer<typeof ItemSchema>>({
     resolver: zodResolver(ItemSchema),
@@ -40,7 +42,7 @@ export const CreateItemForm = () => {
       price: 0,
       quantity: 0,
       image: '',
-      userId: '',
+      userId: userId,
     },
   });
 
@@ -48,26 +50,30 @@ export const CreateItemForm = () => {
     setError('');
     setSuccess('');
 
-    const convertedValues = {
-      ...values,
-      price:
-        typeof values.price === 'string'
-          ? parseFloat(values.price)
-          : values.price,
-      quantity:
-        typeof values.quantity === 'string'
-          ? parseFloat(values.quantity)
-          : values.quantity,
-    };
+    // const convertedValues = {
+    //   ...values,
+    //   price:
+    //     typeof values.price === 'string'
+    //       ? parseFloat(values.price)
+    //       : values.price,
+    //   quantity:
+    //     typeof values.quantity === 'string'
+    //       ? parseFloat(values.quantity)
+    //       : values.quantity,
+    // };
 
     console.log(user);
+    // console.log(convertedValues);
 
     startTransition(() => {
-      const userId = user?.id ?? '';
-      createItem({ ...convertedValues, userId }).then((data) => {
+      createItem({ ...values }).then((data) => {
         console.log(userId);
         setError(data?.error);
         setSuccess(data?.success);
+
+        if (!data?.error) {
+          form.reset(); 
+        }
       });
     });
   };
@@ -147,6 +153,10 @@ export const CreateItemForm = () => {
                       disabled={isPending}
                       placeholder="Item Price"
                       type="number"
+                      inputMode="numeric"
+                      onChange={(e) =>
+                        field.onChange(parseFloat(e.target.value))
+                      }
                     />
                   </FormControl>
                   <FormMessage />
@@ -165,6 +175,10 @@ export const CreateItemForm = () => {
                       disabled={isPending}
                       placeholder="Item Quantity"
                       type="number"
+                      inputMode="numeric"
+                      onChange={(e) =>
+                        field.onChange(parseFloat(e.target.value))
+                      }
                     />
                   </FormControl>
                   <FormMessage />
@@ -191,10 +205,18 @@ export const CreateItemForm = () => {
           </div>
           <FormError message={error} />
           <FormSuccess message={success} />
-          <div className="mt-6 flex justify-end gap-4">
-            <Button disabled={isPending} type="submit">
-              Submit
-            </Button>
+          <div className="mt-6 md:flex block justify-center items-center gap-4 space-y-4 md:space-y-0">
+            <div className="w-full">
+              <Button disabled={isPending} type="submit" className='w-full'>
+                Submit
+              </Button>
+            </div>
+
+            <div className="w-full">
+              <Button variant="secondary" className='w-full'>
+                <Link href="/items">Cancel</Link>
+              </Button>
+            </div>
           </div>
         </form>
       </Form>

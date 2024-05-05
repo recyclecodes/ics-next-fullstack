@@ -4,7 +4,7 @@ import { CreateCompanyForm } from '@/app/(protected)/companies/components/create
 export default async function Page() {
   return (
     <main>
-      <Breadcrumbs
+      {/* <Breadcrumbs
         breadcrumbs={[
           { label: 'Companies', href: '/companies' },
           {
@@ -13,7 +13,7 @@ export default async function Page() {
             active: true,
           },
         ]}
-      />
+      /> */}
       <CreateCompanyForm />
     </main>
   );

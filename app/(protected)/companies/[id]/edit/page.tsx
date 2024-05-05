@@ -15,7 +15,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <main>
-      <Breadcrumbs
+      {/* <Breadcrumbs
         breadcrumbs={[
           { label: 'Companies', href: '/companies' },
           {
@@ -24,7 +24,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             active: true,
           },
         ]}
-      />
+      /> */}
       <EditCompanyForm company={company} />
     </main>
   );

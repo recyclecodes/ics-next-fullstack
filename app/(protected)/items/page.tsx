@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { Suspense } from 'react';
-import Search from '@/app/(protected)/_components/search';
+import Search from '@/components/auth/search';
 import Pagination from '@/app/(protected)/_components/pagination';
 import { fetchItemsPages } from '@/data/items/fetch-items-pages';
 import { CreateItem } from './components/buttons';

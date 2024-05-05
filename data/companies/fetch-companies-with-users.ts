@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { Company } from '@prisma/client';
 
+
 export async function fetchCompanies(): Promise<Company[]> {
   try {
     const companies = await prisma.company.findMany({

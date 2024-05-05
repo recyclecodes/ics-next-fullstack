@@ -21,6 +21,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Heading } from '@/components/ui/heading';
 import ImageUpload from '@/components/ui/image-upload';
+import Link from 'next/link';
 
 export const CreateCompanyForm = () => {
   const [error, setError] = useState<string | undefined>('');
@@ -67,7 +68,7 @@ export const CreateCompanyForm = () => {
                     <Input
                       {...field}
                       disabled={isPending}
-                      placeholder="John Doe"
+                      placeholder="Company XYZ"
                       type="text"
                     />
                   </FormControl>
@@ -95,12 +96,19 @@ export const CreateCompanyForm = () => {
           </div>
           <FormError message={error} />
           <FormSuccess message={success} />
-          <Button disabled={isPending} type="submit" className="w-full">
+          <div className="mt-6 md:flex block justify-end gap-4 space-y-4">
+            <Button disabled={isPending} type="submit" className="w-full">
+              Submit
+            </Button>
+            <Button variant="secondary" className="w-full">
+              <Link href="/companies">Cancel</Link>
+            </Button>
+          </div>
+          {/* <Button disabled={isPending} type="submit" className="w-full">
             Submit
-          </Button>
+          </Button> */}
         </form>
       </Form>
     </>
   );
 };
-

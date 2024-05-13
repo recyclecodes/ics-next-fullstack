@@ -2,10 +2,11 @@
 
 import { AiOutlineMenuUnfold } from 'react-icons/ai';
 import { PiSlackLogoBold } from 'react-icons/pi';
+import { RiFileTransferFill } from 'react-icons/ri';
 import { MdDashboard } from 'react-icons/md';
 import { PiBuildingsFill } from 'react-icons/pi';
-import { FaUsers } from "react-icons/fa";
-import { BsBoxFill } from "react-icons/bs";
+import { FaUsers } from 'react-icons/fa';
+import { BsBoxFill } from 'react-icons/bs';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -52,6 +53,12 @@ export function MainNav({
       icon: <BsBoxFill className="h-5 w-5 mr-5 text-primary" />,
       active: pathname === `/items`,
     },
+    {
+      href: `/transactions`,
+      label: 'SA Transactions',
+      icon: <RiFileTransferFill className="h-5 w-5 mr-5 text-primary" />,
+      active: pathname === `/transactions`,
+    },
   ];
   const adminRoutes = [
     {
@@ -61,16 +68,16 @@ export function MainNav({
       active: pathname === `/`,
     },
     {
-      href: `/companies`,
-      label: 'Admin Companies',
-      icon: <PiBuildingsFill className="h-5 w-5 mr-5 text-primary" />,
-      active: pathname === `/companies`,
-    },
-    {
       href: `/users`,
       label: 'Admin Users',
       icon: <PiBuildingsFill className="h-5 w-5 mr-5 text-primary" />,
       active: pathname === `/users`,
+    },
+    {
+      href: `/transactions`,
+      label: 'Admin Transactions',
+      icon: <RiFileTransferFill className="h-5 w-5 mr-5 text-primary" />,
+      active: pathname === `/transactions`,
     },
   ];
   const userRoutes = [
@@ -81,22 +88,16 @@ export function MainNav({
       active: pathname === `/`,
     },
     {
-      href: `/companies`,
-      label: 'User Companies',
-      icon: <PiBuildingsFill className="h-5 w-5 mr-5 text-primary" />,
-      active: pathname === `/companies`,
-    },
-    {
-      href: `/users`,
-      label: 'User Users',
-      icon: <FaUsers className="h-5 w-5 mr-5 text-primary" />,
-      active: pathname === `/users`,
-    },
-    {
       href: `/items`,
       label: 'User Items',
       icon: <BsBoxFill className="h-5 w-5 mr-5 text-primary" />,
       active: pathname === `/items`,
+    },
+    {
+      href: `/transactions`,
+      label: 'User Transactions',
+      icon: <RiFileTransferFill className="h-5 w-5 mr-5 text-primary" />,
+      active: pathname === `/transactions`,
     },
   ];
 
@@ -117,15 +118,14 @@ export function MainNav({
             </SheetDescription>
           </SheetHeader>
 
-          <SheetClose asChild>
-            <nav
-              className={cn('ml-4 mt-10 flex flex-col space-y-4', className)}
-              {...props}
-            >
-              <RoleGate allowedRole='SUPERADMIN'>
-                {superadminRoutes.map((route) => (
+          <nav
+            className={cn('ml-4 mt-10 flex flex-col space-y-4', className)}
+            {...props}
+          >
+            <RoleGate allowedRole="SUPERADMIN">
+              {superadminRoutes.map((route) => (
+                <SheetClose asChild key={route.href}>
                   <Link
-                    key={route.href}
                     href={route.href}
                     className={cn(
                       'flex items-center text-lg font-medium transition-colors hover:text-primary',
@@ -137,12 +137,13 @@ export function MainNav({
                     {route.icon}
                     {route.label}
                   </Link>
-                ))}
-              </RoleGate>
-              <RoleGate allowedRole='ADMIN'>
-                {adminRoutes.map((route) => (
+                </SheetClose>
+              ))}
+            </RoleGate>
+            <RoleGate allowedRole="ADMIN">
+              {adminRoutes.map((route) => (
+                <SheetClose asChild key={route.href}>
                   <Link
-                    key={route.href}
                     href={route.href}
                     className={cn(
                       'flex items-center text-lg font-medium transition-colors hover:text-primary',
@@ -154,12 +155,13 @@ export function MainNav({
                     {route.icon}
                     {route.label}
                   </Link>
-                ))}
-              </RoleGate>
-              <RoleGate allowedRole='USER'>
-                {userRoutes.map((route) => (
+                </SheetClose>
+              ))}
+            </RoleGate>
+            <RoleGate allowedRole="USER">
+              {userRoutes.map((route) => (
+                <SheetClose asChild key={route.href}>
                   <Link
-                    key={route.href}
                     href={route.href}
                     className={cn(
                       'flex items-center text-lg font-medium transition-colors hover:text-primary',
@@ -171,10 +173,10 @@ export function MainNav({
                     {route.icon}
                     {route.label}
                   </Link>
-                ))}
-              </RoleGate>
-            </nav>
-          </SheetClose>
+                </SheetClose>
+              ))}
+            </RoleGate>
+          </nav>
         </SheetContent>
       </Sheet>
     </>

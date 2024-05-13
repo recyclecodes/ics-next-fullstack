@@ -6,6 +6,8 @@ import { fetchItemsPages } from '@/data/items/fetch-items-pages';
 import { CreateItem } from './components/buttons';
 import ItemsTable from './components/items-table';
 import { currentUser } from '@/lib/auth';
+import SuperadminItemsTable from './components/superadmin-items-table';
+import { RoleGate } from '@/components/auth/role-gate';
 
 export const metadata: Metadata = {
   title: 'ICS | Items',
@@ -36,7 +38,12 @@ export default async function ItemsPage({
         <CreateItem />
       </div>
       <Suspense key={query + currentPage} fallback={''}>
-        <ItemsTable query={query} currentPage={currentPage} userId={userId} />
+        <RoleGate allowedRole="USER">
+          <ItemsTable query={query} currentPage={currentPage} userId={userId} />
+        </RoleGate>
+        <RoleGate allowedRole="SUPERADMIN">
+          <SuperadminItemsTable query={query} currentPage={currentPage} />
+        </RoleGate>
       </Suspense>
       <div className="mt-5 flex w-full justify-center">
         <Pagination totalPages={totalPages} />

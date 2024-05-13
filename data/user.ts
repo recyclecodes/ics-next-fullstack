@@ -90,3 +90,48 @@ export const getUserItems = async (userId: string) => {
     return null;
   }
 };
+
+
+interface UserWithSender {
+  id: string;
+  senderTransfer: any[]; 
+}
+
+
+export const getUserWithSender = async (userId: string): Promise<UserWithSender | null> => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        senderTransfer: true,
+      },
+    });
+    console.log(user);
+    return user as UserWithSender; 
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    return null;
+  }
+};
+
+interface UserWithRecipient {
+  id: string;
+  recipientTransfer: any[]; 
+}
+
+
+export const getUserWithRecipient = async (userId: string): Promise<UserWithRecipient | null> => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        recipientTransfer: true,
+      },
+    });
+    return user as UserWithRecipient;
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    return null;
+  }
+};
+

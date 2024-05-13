@@ -62,9 +62,9 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
 
   useEffect(() => {
     if (selectedCompany) {
-      fetchCompanyUsers(selectedCompany);
+      fetchCompanyUsers(selectedCompany, senderId);
     }
-  }, [selectedCompany]);
+  }, [selectedCompany, senderId]);
 
   useEffect(() => {
     if (selectedCompany) {
@@ -101,14 +101,16 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
     }
   };
 
-  const fetchCompanyUsers = async (companyId: string) => {
+  const fetchCompanyUsers = async (companyId: string, currentUserId: string) => {
     try {
       const companyWithUsers = await getCompanyWithUsersById(companyId);
       if (companyWithUsers) {
-        const users = companyWithUsers.users.map((user) => ({
-          ...user,
-          companyId: user.companyId || '',
-        }));
+        const users = companyWithUsers.users
+          .filter(user => user.id !== currentUserId) // Filter out current user
+          .map((user) => ({
+            ...user,
+            companyId: user.companyId || '',
+          }));
         setCompanyUsers(users);
       } else {
         setCompanyUsers([]);
@@ -118,6 +120,7 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
       setCompanyUsers([]);
     }
   };
+  
 
   const fetchUserItems = async (userId: string) => {
     try {
@@ -163,7 +166,6 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
     }
   
     startTransition(() => {
-      // Filter selected items to include only those that exist in userItems
       const validItems = userItems.filter(item =>
         values.items.includes(item.id)
       );
@@ -173,7 +175,6 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
         return;
       }
   
-      // Create transfer with updated items array
       initiateTransfer({
         senderCompanyId,
         senderId,

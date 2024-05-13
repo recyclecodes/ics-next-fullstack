@@ -8,8 +8,15 @@ export async function fetchFilteredCompanies(query: string, currentPage: number)
 
   try {
     const companies = await prisma.company.findMany({
-      where: { deletedAt: null, OR: [{ name: { contains: query } }] },
+      where: { deletedAt: null, OR: [{ name: { contains: query, mode: 'insensitive' } }] },
       orderBy: { createdAt: 'desc' },
+      include: {
+        users: {
+          include: {
+            items: true,
+          }
+        }
+      },
       take: ITEMS_PER_PAGE,
       skip: offset,
     });

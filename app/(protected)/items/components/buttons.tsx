@@ -6,6 +6,9 @@ import { FaPlus, FaPencil } from 'react-icons/fa6';
 // import { useToast } from '@/components/ui/use-toast';
 // import { deleteCompany, restoreCompany } from '@/lib/companies/actions';
 import Link from 'next/link';
+import { useToast } from '@/components/ui/use-toast';
+import { deleteItem } from '@/actions/items/delete-item';
+import { FaRegTrashAlt } from 'react-icons/fa';
 
 export function CreateItem() {
   return (
@@ -26,5 +29,34 @@ export function UpdateItem({ id }: { id: string }) {
         <FaPencil className="w-5" />
       </Button>
     </Link>
+  );
+}
+
+
+export function DeleteItem({ id }: { id: string }) {
+  const { toast } = useToast();
+
+  const removeItem = async () => {
+    try {
+      await deleteItem(id);
+      toast({
+        variant: 'default',
+        description: `Successfully deleted item with ID ${id}`,
+      });
+    } catch (error) {
+      console.error('An error occurred while deleting the item:', error);
+      toast({
+        variant: 'destructive',
+        description: `Error deleting the item with ID ${id}`,
+      });
+    }
+  };
+  return (
+    <form action={removeItem}>
+      <Button>
+        <span className="sr-only">Delete</span>
+        <FaRegTrashAlt className="w-5" />
+      </Button>
+    </form>
   );
 }

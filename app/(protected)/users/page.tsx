@@ -3,9 +3,8 @@ import { Metadata } from 'next';
 import { Suspense } from 'react';
 import Search from '@/components/auth/search';
 import Pagination from '@/app/(protected)/_components/pagination';
-import UsersTable from '@/app/(protected)/users/components/users-table';
+import UsersTable from '@/app/(protected)/users/components/superadmin-users-table';
 import { CreateUser } from '@/app/(protected)/users/components/buttons';
-import { PageGate } from '@/components/auth/role-page-gate';
 import { Heading } from '@/components/ui/heading';
 
 export const metadata: Metadata = {

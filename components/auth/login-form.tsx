@@ -22,7 +22,7 @@ import { FormSuccess } from '@/components/form-success';
 import { login } from '@/actions/login';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { revalidatePath } from 'next/cache';
+import { useSession } from 'next-auth/react';
 
 export const LoginForm = () => {
   const searchParams = useSearchParams();
@@ -34,6 +34,7 @@ export const LoginForm = () => {
   const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [error, setError] = useState<string | undefined>('');
   const [success, setSuccess] = useState<string | undefined>('');
+  const { update } = useSession();
 
   const [isPending, startTransition] = useTransition();
 
@@ -56,8 +57,8 @@ export const LoginForm = () => {
             form.reset();
             setError(data.error);
           }
-
           if (data?.success) {
+            update();
             form.reset();
             setSuccess(data.success);
           }
@@ -72,7 +73,7 @@ export const LoginForm = () => {
 
   return (
     <CardWrapper
-      headerLabel="Welcome back"
+      headerLabel="Empowering seamless item transfers"
       backButtonLabel="Don't have an account?"
       backButtonHref="/auth/register"
       showSocial

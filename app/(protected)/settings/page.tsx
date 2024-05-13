@@ -73,6 +73,7 @@ const SettingsPage = () => {
   };
 
   return (
+    
     <Card className="w-full">
       <CardHeader>
         <p className="text-2xl font-semibold text-center">Settings</p>
@@ -158,7 +159,7 @@ const SettingsPage = () => {
                 </>
               )}
 
-              {user?.isOAuth === false && (
+              {/* {user?.isOAuth === false && (
                 <FormField
                   control={form.control}
                   name="role"
@@ -184,7 +185,7 @@ const SettingsPage = () => {
                     </FormItem>
                   )}
                 />
-              )}
+              )} */}
 
               <FormField
                 control={form.control}

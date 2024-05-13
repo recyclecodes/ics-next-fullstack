@@ -3,9 +3,12 @@
 // import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { FaPlus, FaPencil } from 'react-icons/fa6';
+import { FaRegTrashAlt } from "react-icons/fa";
 // import { useToast } from '@/components/ui/use-toast';
 // import { deleteCompany, restoreCompany } from '@/lib/companies/actions';
 import Link from 'next/link';
+import { deleteCompany } from '@/actions/companies/delete-company';
+import { useToast } from '@/components/ui/use-toast';
 
 export function CreateCompany() {
   return (
@@ -40,33 +43,33 @@ export function UpdateCompany({ id }: { id: string }) {
 //   );
 // }
 
-// export function DeleteCompany({ id }: { id: string }) {
-//   const { toast } = useToast();
+export function DeleteCompany({ id }: { id: string }) {
+  const { toast } = useToast();
 
-//   const removeCompany = async () => {
-//     try {
-//       await deleteCompany(id);
-//       toast({
-//         variant: 'default',
-//         description: `Successfully deleted company with ID ${id}`,
-//       });
-//     } catch (error) {
-//       console.error('An error occurred while deleting the company:', error);
-//       toast({
-//         variant: 'destructive',
-//         description: `Error deleting the company with ID ${id}`,
-//       });
-//     }
-//   };
-//   return (
-//     <form action={removeCompany}>
-//       <Button>
-//         <span className="sr-only">Delete</span>
-//         <Icons.trash className="w-5" />
-//       </Button>
-//     </form>
-//   );
-// }
+  const removeCompany = async () => {
+    try {
+      await deleteCompany(id);
+      toast({
+        variant: 'default',
+        description: `Successfully deleted company with ID ${id}`,
+      });
+    } catch (error) {
+      console.error('An error occurred while deleting the company:', error);
+      toast({
+        variant: 'destructive',
+        description: `Error deleting the company with ID ${id}`,
+      });
+    }
+  };
+  return (
+    <form action={removeCompany}>
+      <Button>
+        <span className="sr-only">Delete</span>
+        <FaRegTrashAlt className="w-5" />
+      </Button>
+    </form>
+  );
+}
 
 // export function RestoreCompany({ id }: { id: string }) {
 //   const { toast } = useToast();

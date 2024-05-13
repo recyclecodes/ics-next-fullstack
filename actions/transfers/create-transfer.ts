@@ -22,7 +22,7 @@ export const initiateTransfer = async (values: z.infer<typeof TransferSchema>) =
       items,
     } = validatedFields.data;
 
-    // Check if senderId, senderCompanyId, or adminId are undefined, and assign empty strings if they are
+  
     const sanitizedSenderId = senderId ?? '';
     const sanitizedSenderCompanyId = senderCompanyId ?? '';
     const sanitizedAdminId = adminId ?? '';
@@ -31,7 +31,6 @@ export const initiateTransfer = async (values: z.infer<typeof TransferSchema>) =
       return { errors: 'Items must be an array' };
     }
 
-    // Create a new transfer record
     const createdTransfer = await prisma.transfer.create({
       data: {
         senderId: sanitizedSenderId,
@@ -41,7 +40,7 @@ export const initiateTransfer = async (values: z.infer<typeof TransferSchema>) =
         adminId: sanitizedAdminId,
         image,
         status,
-        items: { // Connect existing items
+        items: { 
           connect: items.map(itemId => ({ id: itemId })),
         },
       },

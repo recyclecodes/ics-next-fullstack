@@ -1,20 +1,18 @@
 import Image from 'next/image';
 import { FaUser } from 'react-icons/fa';
-import { fetchFilteredItems } from '@/data/items/fetch-filtered-items';
+import { superadminFetchFilteredItems } from '@/data/items/fetch-filtered-items';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DeleteItem } from './buttons';
 import { formatDateToLocal } from '@/lib/utils';
 
-export default async function ItemsTable({
+export default async function SuperadminItemsTable({
   query,
   currentPage,
-  userId,
 }: {
   query: string;
   currentPage: number;
-  userId: string;
 }) {
-  const items = await fetchFilteredItems(query, currentPage, userId);
+  const items = await superadminFetchFilteredItems(query, currentPage);
 
   return (
     <div className="mt-6 flow-root">
@@ -37,32 +35,32 @@ export default async function ItemsTable({
                             height={28}
                             alt={`${item.name}`}
                           />
-                            <AvatarFallback className="bg-primary">
-                              <FaUser className="text-primary-foreground w-4 h-4" />
-                            </AvatarFallback>
+                          <AvatarFallback className="bg-primary">
+                            <FaUser className="text-primary-foreground w-4 h-4" />
+                          </AvatarFallback>
                         </Avatar>
-                        <p className="ml-2 flex flex-col">{item.name}
-                        <span className="text-xs text-muted-foreground">{item.brand}</span>
+                        <p className="ml-2 flex flex-col">
+                          {item.name}
+                          <span className="text-xs text-muted-foreground">
+                            {item.brand}
+                          </span>
                         </p>
                       </div>
-                      <p className="text-xs text-muted-foreground">{item.brand}</p>
                     </div>
+                  </div>
                     <div className="flex w-full items-center justify-between pt-4">
-                    <div>
-                      <p className="text-sm font-medium">Date added:</p>
-                      <p className="text-base font-medium">
-                        {formatDateToLocal(item.createdAt.toISOString())}
-                        {}
-                      </p>
+                      <div>
+                        <p className="text-sm font-medium">Company:</p>
+                        <p className="text-base font-medium">
+                          {item.user?.company?.name}
+                        </p>
+                      </div>
+                      <div className="flex justify-end gap-2">
+                        {/* <UpdateCompany id={company.id} /> */}
+                        <DeleteItem id={item.id} />
+                        {/* <ViewCompany id={company.id} /> */}
+                      </div>
                     </div>
-                    <div className="flex justify-end gap-2">
-                      {/* <UpdateCompany id={company.id} /> */}
-                      <DeleteItem id={item.id} />
-                      {/* <ViewCompany id={company.id} /> */}
-                    </div>
-                  </div>
-                    
-                  </div>
                 </div>
               ))}
             </div>
@@ -76,8 +74,8 @@ export default async function ItemsTable({
               <>
                 <thead className="rounded-lg text-left text-sm font-normal">
                   <tr>
-                    <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                      ID
+                    <th scope="col" className="px-4 py-5 font-medium sm:pl-3">
+                      Company
                     </th>
                     <th scope="col" className="px-3 py-5 font-medium">
                       Item
@@ -93,22 +91,26 @@ export default async function ItemsTable({
                       key={item.id}
                       className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                     >
-                      <td className="whitespace-nowrap px-3 py-3">{item.id}</td>
+                      <td className="whitespace-nowrap px-3 py-3 pl-3">{item.user?.company?.name}</td>
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex items-center gap-3">
-                        <Avatar>
-                          <AvatarImage
-                            src={item.image ?? '/fallback/fallback.png'}
-                            width={28}
-                            height={28}
-                            alt={`${item.name}`}
-                          />
+                          <Avatar>
+                            <AvatarImage
+                              src={item.image ?? '/fallback/fallback.png'}
+                              width={28}
+                              height={28}
+                              alt={`${item.name}`}
+                            />
                             <AvatarFallback className="bg-primary">
                               <FaUser className="text-primary-foreground w-4 h-4" />
                             </AvatarFallback>
-      
-                        </Avatar>
-                          <p className='ml-2'>{item.name}</p>
+                          </Avatar>
+                          <p className="ml-2 flex flex-col">
+                          {item.name}
+                          <span className="text-xs text-muted-foreground">
+                            {item.brand}
+                          </span>
+                        </p>
                         </div>
                       </td>
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">

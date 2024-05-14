@@ -58,6 +58,25 @@ export const getCurrentUserCompany = async (userId: string) => {
   }
 };
 
+export const getCurrentUserCompanyId = async (userId: string) => {
+  try {
+    const userWithCompany = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        companyId: true,
+      },
+    });
+
+
+    return userWithCompany;
+  } catch (error) {
+    console.error('Error fetching company of current user:', error);
+    return null;
+  }
+};
+
 export const getAdminUserByCompanyId = async (companyId: string) => {
   try {
     const adminUser = await prisma.user.findFirst({

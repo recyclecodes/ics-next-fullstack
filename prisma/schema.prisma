@@ -163,6 +163,6 @@ model Transfer {
 enum TransferStatus {
   PENDING
   APPROVED
-  REJECTED
+  DECLINED
   ACCEPTED
 }

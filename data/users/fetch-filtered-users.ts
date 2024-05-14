@@ -13,7 +13,6 @@ export async function fetchFilteredUsers(query: string, currentPage: number) {
         OR: [
           { name: { contains: query, mode: 'insensitive' } },
           { company: { name: { contains: query, mode: 'insensitive' } } },
-          
         ],
       },
       orderBy: { createdAt: 'desc' },
@@ -31,16 +30,21 @@ export async function fetchFilteredUsers(query: string, currentPage: number) {
   }
 }
 
-
-export async function fetchFilteredAdminUsers(query: string, currentPage: number, currentUserCompanyId: string) {
+export async function fetchFilteredAdminUsers(
+  query: string,
+  currentPage: number,
+  currentUserId: string,
+  currentUserCompanyId: string
+) {
   noStore();
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
     const users = await prisma.user.findMany({
       where: {
+        id: { not: currentUserId },
         deletedAt: null,
-        companyId: currentUserCompanyId, // Filter by companyId of the currently logged-in user
+        companyId: currentUserCompanyId,
         OR: [
           { name: { contains: query, mode: 'insensitive' } },
           { company: { name: { contains: query, mode: 'insensitive' } } },
@@ -49,6 +53,7 @@ export async function fetchFilteredAdminUsers(query: string, currentPage: number
       orderBy: { createdAt: 'desc' },
       include: {
         company: true,
+        items: true,
       },
       take: ITEMS_PER_PAGE,
       skip: offset,
@@ -57,7 +62,6 @@ export async function fetchFilteredAdminUsers(query: string, currentPage: number
     return users;
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('[FETCH_FILTERED_USERS]>Failed to fetch users.');
+    throw new Error('[FETCH_FILTERED_ADMIN_USERS]>Failed to fetch users.');
   }
 }
-

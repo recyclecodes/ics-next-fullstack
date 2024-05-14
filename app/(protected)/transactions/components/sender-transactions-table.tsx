@@ -100,7 +100,7 @@ export default async function SenderTransactionsTable({
                     <Badge
                       className="inline-flex items-center text-xs"
                       variant={
-                        transaction?.status === 'REJECTED'
+                        transaction?.status === 'DECLINED'
                           ? 'destructive'
                           : transaction?.status === 'ACCEPTED'
                           ? 'outline'
@@ -111,7 +111,7 @@ export default async function SenderTransactionsTable({
                     >
                       {transaction?.status === 'APPROVED'
                         ? 'Approved'
-                        : transaction?.status === 'REJECTED'
+                        : transaction?.status === 'DECLINED'
                         ? 'Rejected'
                         : transaction?.status === 'ACCEPTED'
                         ? 'Accepted'
@@ -120,7 +120,7 @@ export default async function SenderTransactionsTable({
                   </td>
                   {/* <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      {transaction.status !== 'REJECTED' && (
+                      {transaction.status !== 'DECLINED' && (
                         <RejectTransaction id={transaction.id} />
                       )}
                       {transaction.status !== 'APPROVED' && (

@@ -101,7 +101,7 @@ export const TransferSchema = z.object({
   status: z.enum([
     TransferStatus.ACCEPTED,
     TransferStatus.PENDING,
-    TransferStatus.REJECTED,
+    TransferStatus.DECLINED,
     TransferStatus.APPROVED,
   ]),
 });

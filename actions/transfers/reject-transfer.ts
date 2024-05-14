@@ -6,7 +6,7 @@ export async function rejectTransfer(id: string | undefined) {
   try {
     await prisma.transfer.update({
       where: { id },
-      data: { status: 'REJECTED' },
+      data: { status: 'DECLINED' },
     });
   } catch (error) {
     return { message: 'Database Error: Failed to Reject Transaction.' };

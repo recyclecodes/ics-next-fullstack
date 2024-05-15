@@ -116,11 +116,15 @@ export default async function TransactionsTable({
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      {transaction.status !== 'DECLINED' && (
-                        <RejectTransaction id={transaction.id} />
-                      )}
-                      {transaction.status !== 'APPROVED' && (
-                        <ApproveTransaction id={transaction.id} />
+                      {transaction.status !== 'ACCEPTED' && (
+                        <>
+                          {transaction.status !== 'APPROVED' && (
+                            <ApproveTransaction id={transaction.id} />
+                          )}
+                          {transaction.status !== 'DECLINED' && (
+                            <RejectTransaction id={transaction.id} />
+                          )}
+                        </>
                       )}
                     </div>
                   </td>

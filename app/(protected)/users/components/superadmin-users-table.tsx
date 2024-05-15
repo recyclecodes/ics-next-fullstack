@@ -36,10 +36,10 @@ export default async function UsersTable({
   );
 
   return (
-    <div className="mt-6 flow-root">
+    <div className="mt-6 flow-root ">
       <Tabs defaultValue="all">
         <div className="inline-block min-w-full align-middle">
-          <TabsList>
+          <TabsList className='-mb-2'>
             <TabsTrigger value="all">All</TabsTrigger>
             <TabsTrigger value="admin">Admins</TabsTrigger>
             <TabsTrigger value="user">Users</TabsTrigger>

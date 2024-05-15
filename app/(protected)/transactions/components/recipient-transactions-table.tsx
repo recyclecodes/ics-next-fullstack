@@ -1,12 +1,8 @@
 import Image from 'next/image';
-import { formatDateToLocal } from '@/lib/utils';
-import { fetchFilteredItems } from '@/data/items/fetch-filtered-items';
-import {
-  fetchTransfersByAdminId,
-  fetchTransfersByRecipientId,
-} from '@/data/transactions/fetch-filtered-transactions';
+import { fetchTransfersByRecipientId } from '@/data/transactions/fetch-filtered-transactions';
 import { Badge } from '@/components/ui/badge';
-import { ApproveTransaction, RejectTransaction } from './buttons';
+import { AcceptTransaction } from './buttons';
+
 
 export default async function RecipientTransactionsTable({
   query,
@@ -25,9 +21,6 @@ export default async function RecipientTransactionsTable({
 
   return (
     <>
-    <h1>
-        Recipient Transaction Table
-    </h1>
       <div className="mt-6 flow-root">
         <div className="inline-block min-w-full align-middle">
           <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
@@ -123,13 +116,10 @@ export default async function RecipientTransactionsTable({
                     </td>
                     <td className="whitespace-nowrap py-3 pl-6 pr-3">
                       <div className="flex justify-end gap-3">
-                      {transaction.status !== 'DECLINED' && (
-                        <RejectTransaction id={transaction.id} />
-                      )}
-                      {transaction.status !== 'ACCEPTED' && (
-                        <ApproveTransaction id={transaction.id} />
-                      )}
-                    </div>
+                        {transaction.status !== 'ACCEPTED' && (
+                          <AcceptTransaction id={transaction.id} />
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}

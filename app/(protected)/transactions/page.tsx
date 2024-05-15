@@ -12,6 +12,7 @@ import RecipientTransactionsTable from './components/recipient-transactions-tabl
 import { RoleGate } from '@/components/auth/role-gate';
 import { getUserWithRecipient, getUserWithSender } from '@/data/user';
 import { CreateTransaction } from './components/buttons';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export const metadata: Metadata = {
   title: 'ICS | Transactions',
@@ -42,7 +43,7 @@ export default async function TransactionsPage({
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <Search placeholder="Search Transactions..." />
-        <CreateTransaction/>
+        <CreateTransaction />
       </div>
       <Suspense key={query + currentPage} fallback={''}>
         <RoleGate allowedRole="ADMIN">
@@ -53,21 +54,30 @@ export default async function TransactionsPage({
           />
         </RoleGate>
         <RoleGate allowedRole="USER">
-          {userWithRecipient?.recipientTransfer && (
-            <SenderTransactionsTable
-              query={query}
-              currentPage={currentPage}
-              userId={userId}
-            />
-          )}
-          {userWithSender?.senderTransfer && (
-            <RecipientTransactionsTable
-              query={query}
-              currentPage={currentPage}
-              userId={userId}
-            />
-          )}
-          
+          <Tabs defaultValue='outgoing' className='mt-4 -mb-4'>
+            <TabsList>
+              <TabsTrigger value="outgoing">Outgoing</TabsTrigger>
+              <TabsTrigger value="incoming">Incoming</TabsTrigger>
+            </TabsList>
+            <TabsContent value="outgoing">
+              {userWithRecipient?.recipientTransfer && (
+                <SenderTransactionsTable
+                  query={query}
+                  currentPage={currentPage}
+                  userId={userId}
+                />
+              )}
+            </TabsContent>
+            <TabsContent value="incoming">
+              {userWithSender?.senderTransfer && (
+                <RecipientTransactionsTable
+                  query={query}
+                  currentPage={currentPage}
+                  userId={userId}
+                />
+              )}
+            </TabsContent>
+          </Tabs>
         </RoleGate>
       </Suspense>
       <div className="mt-5 flex w-full justify-center">

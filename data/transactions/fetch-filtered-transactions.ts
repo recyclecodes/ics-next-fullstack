@@ -15,7 +15,7 @@ export async function fetchTransfersByAdminId(
     const transfers = await prisma.transfer.findMany({
       where: {
         adminId: userId,
-        OR: [{ items: { some: { name: { contains: query } } } }],
+        OR: [{ items: { some: { name: { contains: query, mode:'insensitive' } } } }],
       },
       orderBy: { createdAt: 'desc' },
       take: TRANSFERS_PER_PAGE,

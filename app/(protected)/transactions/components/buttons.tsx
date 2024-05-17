@@ -48,9 +48,10 @@ export function ApproveTransaction({ id }: { id: string }) {
   };
   return (
     <form action={approveTransaction}>
-      <Button>
+      <Button variant="default" className="gap-2 w-full">
         <span className="sr-only">Approve</span>
         <FaCheck className="w-5" />
+        Approve
       </Button>
     </form>
   );
@@ -79,9 +80,10 @@ export function RejectTransaction({ id }: { id: string }) {
   };
   return (
     <form action={rejectTransaction}>
-      <Button>
-        <span className="sr-only">Reject</span>
+      <Button variant="secondary" className="gap-2 w-full">
+        <span className="sr-only">Decline</span>
         <ImCross className="w-5" />
+        Decline
       </Button>
     </form>
   );

@@ -31,31 +31,31 @@ export function MainNav({
   const superadminRoutes = [
     {
       href: `/`,
-      label: 'SA Overview',
+      label: 'Overview',
       icon: <MdDashboard className="h-5 w-5 mr-5 text-primary" />,
       active: pathname === `/`,
     },
     {
       href: `/companies`,
-      label: 'SA Companies',
+      label: 'Companies',
       icon: <PiBuildingsFill className="h-5 w-5 mr-5 text-primary" />,
       active: pathname === `/companies`,
     },
     {
       href: `/users`,
-      label: 'SA Users',
+      label: 'Users',
       icon: <FaUsers className="h-5 w-5 mr-5 text-primary" />,
       active: pathname === `/users`,
     },
     {
       href: `/items`,
-      label: 'SA Items',
+      label: 'Items',
       icon: <BsBoxFill className="h-5 w-5 mr-5 text-primary" />,
       active: pathname === `/items`,
     },
     {
       href: `/transactions`,
-      label: 'SA Transactions',
+      label: 'Transactions',
       icon: <RiFileTransferFill className="h-5 w-5 mr-5 text-primary" />,
       active: pathname === `/transactions`,
     },
@@ -63,39 +63,45 @@ export function MainNav({
   const adminRoutes = [
     {
       href: `/`,
-      label: 'Admin Overview',
+      label: 'Overview',
       icon: <MdDashboard className="h-5 w-5 mr-5 text-primary" />,
       active: pathname === `/`,
     },
     {
       href: `/users`,
-      label: 'Admin Users',
+      label: 'Users',
       icon: <PiBuildingsFill className="h-5 w-5 mr-5 text-primary" />,
       active: pathname === `/users`,
     },
     {
       href: `/transactions`,
-      label: 'Admin Transactions',
+      label: 'Transactions',
       icon: <RiFileTransferFill className="h-5 w-5 mr-5 text-primary" />,
       active: pathname === `/transactions`,
+    },
+    {
+      href: `/items`,
+      label: 'Items',
+      icon: <BsBoxFill className="h-5 w-5 mr-5 text-primary" />,
+      active: pathname === `/items`,
     },
   ];
   const userRoutes = [
     {
       href: `/`,
-      label: 'User Overview',
+      label: 'Overview',
       icon: <MdDashboard className="h-5 w-5 mr-5 text-primary" />,
       active: pathname === `/`,
     },
     {
       href: `/items`,
-      label: 'User Items',
+      label: 'Items',
       icon: <BsBoxFill className="h-5 w-5 mr-5 text-primary" />,
       active: pathname === `/items`,
     },
     {
       href: `/transactions`,
-      label: 'User Transactions',
+      label: 'Transactions',
       icon: <RiFileTransferFill className="h-5 w-5 mr-5 text-primary" />,
       active: pathname === `/transactions`,
     },

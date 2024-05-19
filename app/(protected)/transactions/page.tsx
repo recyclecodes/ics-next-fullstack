@@ -13,6 +13,9 @@ import { RoleGate } from '@/components/auth/role-gate';
 import { getUserWithRecipient, getUserWithSender } from '@/data/user';
 import { CreateTransaction } from './components/buttons';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import SuperadminItemsTable from '../items/components/superadmin-items-table';
+import SuperadminTransactionsTable from './components/superadmin-transactions-table';
+import { Heading } from '@/components/ui/heading';
 
 export const metadata: Metadata = {
   title: 'ICS | Transactions',
@@ -39,13 +42,19 @@ export default async function TransactionsPage({
   return (
     <div className="w-full">
       <div className="flex w-full items-center justify-between">
-        <h1 className="text-base">Transactions</h1>
+        <Heading title="Transactions" description="List of transactions" />
       </div>
-      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+      <div className="flex items-center justify-between gap-2 md:mt-4">
         <Search placeholder="Search Transactions..." />
         <CreateTransaction />
       </div>
       <Suspense key={query + currentPage} fallback={''}>
+        <RoleGate allowedRole="SUPERADMIN">
+          <SuperadminTransactionsTable
+            currentPage={currentPage}
+            query={query}
+          />
+        </RoleGate>
         <RoleGate allowedRole="ADMIN">
           <TransactionsTable
             query={query}
@@ -54,7 +63,7 @@ export default async function TransactionsPage({
           />
         </RoleGate>
         <RoleGate allowedRole="USER">
-          <Tabs defaultValue='outgoing' className='mt-4 -mb-4'>
+          <Tabs defaultValue="outgoing" className="mt-4 -mb-4">
             <TabsList>
               <TabsTrigger value="outgoing">Outgoing</TabsTrigger>
               <TabsTrigger value="incoming">Incoming</TabsTrigger>

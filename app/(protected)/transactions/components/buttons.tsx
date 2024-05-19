@@ -122,9 +122,10 @@ export function AcceptTransaction({ id }: { id: string }) {
 
   return (
     <div>
-      <button onClick={handleApprove} disabled={isPending}>
+      <Button onClick={handleApprove} disabled={isPending}>
         {isPending ? 'Processing...' : 'Accept'}
-      </button>
+      </Button>
+
       {error && <p className="text-red-500">{error}</p>}
     </div>
   );

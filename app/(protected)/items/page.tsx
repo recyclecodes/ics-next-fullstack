@@ -8,6 +8,9 @@ import ItemsTable from './components/items-table';
 import { currentUser } from '@/lib/auth';
 import SuperadminItemsTable from './components/superadmin-items-table';
 import { RoleGate } from '@/components/auth/role-gate';
+import AdminItemsTable from './components/admin-items-table';
+import { getCurrentUserCompanyId } from '@/data/user';
+import { Heading } from '@/components/ui/heading';
 
 export const metadata: Metadata = {
   title: 'ICS | Items',
@@ -27,17 +30,26 @@ export default async function ItemsPage({
   const totalPages = await fetchItemsPages(query);
   const user = await currentUser();
   const userId = user?.id ?? '';
+  const currentUserCompany = await getCurrentUserCompanyId(userId);
+  const currentUserCompanyId = currentUserCompany?.companyId || '';
 
   return (
     <div className="w-full">
       <div className="flex w-full items-center justify-between">
-        <h1 className="text-base">Items</h1>
+        <Heading title="Items" description="List of items" />
       </div>
-      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+      <div className=" flex items-center justify-between gap-2 md:mt-4">
         <Search placeholder="Search Items..." />
         <CreateItem />
       </div>
       <Suspense key={query + currentPage} fallback={''}>
+        <RoleGate allowedRole="ADMIN">
+          <AdminItemsTable
+            query={query}
+            currentPage={currentPage}
+            currentUserCompanyId={currentUserCompanyId}
+          />
+        </RoleGate>
         <RoleGate allowedRole="USER">
           <ItemsTable query={query} currentPage={currentPage} userId={userId} />
         </RoleGate>

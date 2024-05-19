@@ -29,7 +29,7 @@ export default async function CompaniesPage({
       <div className="flex w-full items-center justify-between">
         <Heading title="Companies" description="List of companies" />
       </div>
-      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+      <div className=" flex items-center justify-between gap-2 md:mt-4">
         <Search placeholder="Search Companies..." />
         <CreateCompany />
       </div>

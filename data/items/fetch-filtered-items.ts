@@ -44,9 +44,48 @@ export async function superadminFetchFilteredItems(
         OR: [
           { name: { contains: query, mode: 'insensitive' } },
           { brand: { contains: query, mode: 'insensitive' } },
-          {user: { company: {name: {contains: query, mode: 'insensitive' }}}}
+          {
+            user: {
+              company: { name: { contains: query, mode: 'insensitive' } },
+            },
+          },
         ],
-        
+      },
+      include: {
+        user: {
+          include: {
+            company: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: ITEMS_PER_PAGE,
+      skip: offset,
+    });
+
+    return items;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('[FETCH_FILTERED_ITEMS]>Failed to fetch items.');
+  }
+}
+
+export async function adminFetchFilteredItems(
+  query: string,
+  currentPage: number,
+  currentUserCompanyId: string
+) {
+  noStore();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const items = await prisma.item.findMany({
+      where: {
+        deletedAt: null,
+        user: {
+          companyId: currentUserCompanyId, 
+        },
+        OR: [{ name: { contains: query, mode: 'insensitive' } }],
       },
       include: {
         user: {

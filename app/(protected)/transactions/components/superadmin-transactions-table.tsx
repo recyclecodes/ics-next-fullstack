@@ -1,32 +1,28 @@
 import Image from 'next/image';
-import { formatDateToLocal } from '@/lib/utils';
-import { fetchFilteredItems } from '@/data/items/fetch-filtered-items';
-import {
-  fetchTransfersByAdminId,
-  fetchTransfersBySenderId,
-} from '@/data/transactions/fetch-filtered-transactions';
+
+import { fetchFilteredTransfers } from '@/data/transactions/fetch-filtered-transactions';
 import { Badge } from '@/components/ui/badge';
 import { ApproveTransaction, RejectTransaction } from './buttons';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FaUser } from 'react-icons/fa';
 
-export default async function SenderTransactionsTable({
+export default async function SuperadminTransactionsTable({
   query,
   currentPage,
-  userId,
+
 }: {
   query: string;
   currentPage: number;
-  userId: string;
+
 }) {
-  const transactions = await fetchTransfersBySenderId(
+  const transactions = await fetchFilteredTransfers(
     query,
     currentPage,
-    userId
+
   );
 
   return (
-    <div className="-mt-2 flow-root">
+    <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-secondary p-2 md:pt-0">
           {transactions && transactions.length > 0 ? (
@@ -37,56 +33,37 @@ export default async function SenderTransactionsTable({
                   className="mb-2 w-full rounded-md bg-background p-4"
                 >
                   <div className="flex items-center justify-between border-b pb-4">
-                    {transaction.items.map((item) => (
-                      <div
-                        key={item.id}
-                        className="mb-2 flex items-center justify-between"
-                      >
-                        <Avatar>
-                          <AvatarImage
-                            src={item.image ?? '/fallback/fallback.png'}
-                            width={28}
-                            height={28}
-                            alt={`${item.name}`}
-                          />
-                          <AvatarFallback className="bg-primary">
-                            <FaUser className="text-primary-foreground w-4 h-4" />
-                          </AvatarFallback>
-                        </Avatar>
+                    <div className="flex items-center">
+                      <Avatar>
+                        <AvatarImage
+                          src={
+                            transaction.sender.image ?? '/fallback/fallback.png'
+                          }
+                          width={28}
+                          height={28}
+                          alt={`${transaction.sender.name}`}
+                        />
+                        <AvatarFallback className="bg-primary">
+                          <FaUser className="text-primary-foreground w-4 h-4" />
+                        </AvatarFallback>
+                      </Avatar>
 
-                        <p className="ml-2 flex flex-col">
-                          {item.name}
-                          <span className="text-xs text-muted-foreground">
-                            {item.brand}
-                          </span>
-                        </p>
-                      </div>
-                    ))}
-                    <div>
-                      <Badge
-                        className="rounded-lg px-2 py-1 justify-center text-xs"
-                        variant={
-                          transaction?.status === 'DECLINED'
-                            ? 'destructive'
-                            : transaction?.status === 'ACCEPTED'
-                            ? 'success'
-                            : transaction?.status === 'APPROVED'
-                            ? 'progress'
-                            : 'pending'
-                        }
-                      >
-                        {transaction?.status === 'APPROVED'
-                          ? 'IN PROGRESS'
-                          : transaction?.status === 'DECLINED'
-                          ? 'DECLINED'
-                          : transaction?.status === 'ACCEPTED'
-                          ? 'DELIVERED'
-                          : 'PENDING'}
-                      </Badge>
+                      <p className="ml-2 flex flex-col">
+                        {transaction.sender.name}
+                        <span className="text-xs text-muted-foreground">
+                          {transaction.senderCompany.name}
+                        </span>
+                      </p>
                     </div>
+                    <Badge
+                      variant="outline"
+                      className="rounded-lg py-1 justify-center text-xs w-[116px] h-8"
+                    >
+                      SENDER
+                    </Badge>
                   </div>
-                  <div className="flex w-full items-center justify-end pt-4">
-                    <div className="mb-2 flex items-center justify-between">
+                  <div className="flex items-center justify-between border-b py-4">
+                    <div className="flex items-center">
                       <Avatar>
                         <AvatarImage
                           src={
@@ -104,18 +81,70 @@ export default async function SenderTransactionsTable({
 
                       <p className="ml-2 flex flex-col">
                         {transaction.recipient.name}
-
                         <span className="text-xs text-muted-foreground">
                           {transaction.recipientCompany.name}
                         </span>
                       </p>
                     </div>
-
-                    <div className="flex justify-end gap-2">
-                      {/* <UpdateCompany id={company.id} /> */}
-                      {/* <DeleteItem id={item.id} /> */}
-                      {/* <ViewCompany id={company.id} /> */}
-                    </div>
+                    <Badge
+                      variant="outline"
+                      className="rounded-lg py-1 justify-center text-xs w-[116px] h-8"
+                    >
+                      RECIEVER
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between mt-4 items-center">
+                    {transaction.items.map((item) => (
+                      <div key={item.id} className="flex items-center">
+                        <Avatar className="rounded-lg w-20 h-20 shadow-lg">
+                          <AvatarImage
+                            src={item.image ?? '/fallback/fallback.png'}
+                            width={28}
+                            height={28}
+                            alt={`${item.name}`}
+                          />
+                          <AvatarFallback className="bg-primary">
+                            <FaUser className="text-primary-foreground w-4 h-4" />
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-col ml-3 gap-y-1">
+                          <p>{item.name}</p>
+                          <span className="text-xs text-muted-foreground">
+                            {item.brand}
+                          </span>
+                          <Badge
+                            className="rounded-lg py-1 justify-center text-xs h-8"
+                            variant={
+                              transaction?.status === 'DECLINED'
+                                ? 'destructive'
+                                : transaction?.status === 'ACCEPTED'
+                                ? 'success'
+                                : transaction?.status === 'APPROVED'
+                                ? 'progress'
+                                : 'pending'
+                            }
+                          >
+                            {transaction?.status === 'APPROVED'
+                              ? 'IN PROGRESS'
+                              : transaction?.status === 'DECLINED'
+                              ? 'DECLINED'
+                              : transaction?.status === 'ACCEPTED'
+                              ? 'DELIVERED'
+                              : 'PENDING'}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                    {transaction.status !== 'ACCEPTED' && (
+                      <div className="flex flex-col gap-2 self-end">
+                        {transaction.status !== 'APPROVED' && (
+                          <ApproveTransaction id={transaction.id} />
+                        )}
+                        {transaction.status !== 'DECLINED' && (
+                          <RejectTransaction id={transaction.id} />
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
@@ -146,12 +175,9 @@ export default async function SenderTransactionsTable({
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-background">
+            <tbody className="bg-secondary">
               {transactions?.map((transaction) => (
-                <tr
-                  key={transaction.id}
-                  className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
-                >
+                <tr key={transaction.id}>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
                       <Image
@@ -204,31 +230,35 @@ export default async function SenderTransactionsTable({
                         transaction?.status === 'DECLINED'
                           ? 'destructive'
                           : transaction?.status === 'ACCEPTED'
-                          ? 'success'
+                          ? 'outline'
                           : transaction?.status === 'APPROVED'
-                          ? 'progress'
-                          : 'pending'
+                          ? 'success'
+                          : 'secondary'
                       }
                     >
                       {transaction?.status === 'APPROVED'
-                        ? 'IN PROGRESS'
+                        ? 'Approved'
                         : transaction?.status === 'DECLINED'
-                        ? 'DECLINED'
+                        ? 'Rejected'
                         : transaction?.status === 'ACCEPTED'
-                        ? 'DELIVERED'
-                        : 'PENDING'}
+                        ? 'Accepted'
+                        : 'Pending'}
                     </Badge>
                   </td>
-                  {/* <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      {transaction.status !== 'DECLINED' && (
-                        <RejectTransaction id={transaction.id} />
-                      )}
-                      {transaction.status !== 'APPROVED' && (
-                        <ApproveTransaction id={transaction.id} />
+                      {transaction.status !== 'ACCEPTED' && (
+                        <>
+                          {transaction.status !== 'APPROVED' && (
+                            <ApproveTransaction id={transaction.id} />
+                          )}
+                          {transaction.status !== 'DECLINED' && (
+                            <RejectTransaction id={transaction.id} />
+                          )}
+                        </>
                       )}
                     </div>
-                  </td> */}
+                  </td>
                 </tr>
               ))}
             </tbody>

@@ -15,7 +15,7 @@ export async function fetchUserById(id: string) {
       companyId: user.companyId || '',
       name: user.name || '',
       email: user.email || '',
-      image: user.image || `'/fallback/fallback.png'`,
+      image: user.image || '/fallback/fallback.png',
       role: user.role,
       createdAt: user.createdAt,
     };

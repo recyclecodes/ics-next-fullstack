@@ -52,6 +52,7 @@ model User {
   senderTransfer        Transfer[]             @relation("TransferFromSender")
   recipientTransfer     Transfer[]             @relation("TransferToUser")
   adminTransfer         Transfer[]             @relation("TransferApprovedByAdmin")
+  notifications         Notification[]         @relation("UserNotifications")
 
   // adminUser   User?   @relation("UserToAdmin", fields: [adminUserId], references: [id])
   // adminUserId String?
@@ -166,4 +167,18 @@ enum TransferStatus {
   APPROVED
   DECLINED
   ACCEPTED
+}
+
+model Notification {
+  id          String   @id @default(cuid())
+  title       String
+  body        String
+  data        Json?
+  userId      String
+  user        User     @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
+  readAt      DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId, createdAt])
 }

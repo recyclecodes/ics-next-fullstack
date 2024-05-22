@@ -22,7 +22,7 @@ export default async function RecipientTransactionsTable({
 
   return (
     <>
-      <div className="mt-6 flow-root">
+      <div className="-mt-2 flow-root">
         <div className="inline-block min-w-full align-middle">
           <div className="rounded-lg bg-secondary p-2 md:pt-0">
             {transactions && transactions.length > 0 ? (

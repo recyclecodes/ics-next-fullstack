@@ -1,5 +1,4 @@
-import Image from 'next/image';
-// import { DeleteCompany, UpdateCompany, ViewCompany } from './buttons';
+
 import { formatDateToLocal } from '@/lib/utils';
 import { fetchFilteredCompanies } from '@/data/companies/fetch-filtered-companies';
 import { DeleteCompany, UpdateCompany } from './buttons';
@@ -131,7 +130,7 @@ export default async function CompaniesTable({
                               <FaUser className="text-primary-foreground w-4 h-4" />
                             </AvatarFallback>
                           </Avatar>
-                          <p>{company.name}</p>
+                          <div>{company.name}</div>
                         </div>
                       </td>
 
@@ -165,7 +164,7 @@ export default async function CompaniesTable({
                 </tbody>
               </>
             ) : (
-              <p className="text-center text-primary py-4">No data found</p>
+              <div className="text-center text-primary py-4">No data found</div>
             )}
           </table>
         </div>

@@ -9,6 +9,8 @@ import Link from 'next/link';
 import { useToast } from '@/components/ui/use-toast';
 import { deleteItem } from '@/actions/items/delete-item';
 import { FaRegTrashAlt } from 'react-icons/fa';
+import { supabase } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
 
 export function CreateItem() {
   return (
@@ -32,9 +34,24 @@ export function UpdateItem({ id }: { id: string }) {
   );
 }
 
-
 export function DeleteItem({ id }: { id: string }) {
   const { toast } = useToast();
+  const router = useRouter();
+
+  supabase
+    .channel('realtime items')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'Item',
+      },
+      (payload: any) => {
+        router.refresh();
+      }
+    )
+    .subscribe();
 
   const removeItem = async () => {
     try {

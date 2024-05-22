@@ -1,9 +1,13 @@
-import Image from 'next/image';
+
 import { FaUser } from 'react-icons/fa';
-import { adminFetchFilteredItems, fetchFilteredItems } from '@/data/items/fetch-filtered-items';
+import {
+  adminFetchFilteredItems,
+} from '@/data/items/fetch-filtered-items';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DeleteItem } from './buttons';
 import { formatDateToLocal } from '@/lib/utils';
+import { supabase } from '@/lib/supabase';
+
 
 export default async function AdminItemsTable({
   query,
@@ -14,7 +18,27 @@ export default async function AdminItemsTable({
   currentPage: number;
   currentUserCompanyId: string;
 }) {
-  const items = await adminFetchFilteredItems(query, currentPage,currentUserCompanyId );
+  const items = await adminFetchFilteredItems(
+    query,
+    currentPage,
+    currentUserCompanyId
+  );
+
+
+//  supabase
+//   .channel("realtime items")
+//   .on(
+//     "postgres_changes",
+//     {
+//       event: "*",
+//       schema: "public",
+//       table: "Item",
+//     },
+//     (payload) => {
+//       console.log(payload)
+//     }
+//   )
+//   .subscribe();
 
   return (
     <div className="mt-6 flow-root">
@@ -37,31 +61,35 @@ export default async function AdminItemsTable({
                             height={28}
                             alt={`${item.name}`}
                           />
-                            <AvatarFallback className="bg-primary">
-                              <FaUser className="text-primary-foreground w-4 h-4" />
-                            </AvatarFallback>
+                          <AvatarFallback className="bg-primary">
+                            <FaUser className="text-primary-foreground w-4 h-4" />
+                          </AvatarFallback>
                         </Avatar>
-                        <p className="ml-2 flex flex-col">{item.name}
-                        <span className="text-xs text-muted-foreground">{item.brand}</span>
+                        <p className="ml-2 flex flex-col">
+                          {item.name}
+                          <span className="text-xs text-muted-foreground">
+                            {item.brand}
+                          </span>
                         </p>
                       </div>
-                      <p className="text-xs text-muted-foreground">{item.brand}</p>
-                    </div>
-                    <div className="flex w-full items-center justify-between pt-4">
-                    <div>
-                      <p className="text-sm font-medium">Date added:</p>
-                      <p className="text-base font-medium">
-                        {formatDateToLocal(item.createdAt.toISOString())}
-                        {}
+                      <p className="text-xs text-muted-foreground">
+                        {item.brand}
                       </p>
                     </div>
-                    <div className="flex justify-end gap-2">
-                      {/* <UpdateCompany id={company.id} /> */}
-                      <DeleteItem id={item.id} />
-                      {/* <ViewCompany id={company.id} /> */}
+                    <div className="flex w-full items-center justify-between pt-4">
+                      <div>
+                        <p className="text-sm font-medium">Date added:</p>
+                        <p className="text-base font-medium">
+                          {formatDateToLocal(item.createdAt.toISOString())}
+                          {}
+                        </p>
+                      </div>
+                      <div className="flex justify-end gap-2">
+                        {/* <UpdateCompany id={company.id} /> */}
+                        <DeleteItem id={item.id} />
+                        {/* <ViewCompany id={company.id} /> */}
+                      </div>
                     </div>
-                  </div>
-                    
                   </div>
                 </div>
               ))}
@@ -71,6 +99,7 @@ export default async function AdminItemsTable({
               No data found
             </p>
           )}
+
           <table className=" hidden min-w-full md:table">
             {items && items.length > 0 ? (
               <>
@@ -96,19 +125,18 @@ export default async function AdminItemsTable({
                       <td className="whitespace-nowrap px-3 py-3">{item.id}</td>
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex items-center gap-3">
-                        <Avatar>
-                          <AvatarImage
-                            src={item.image ?? '/fallback/fallback.png'}
-                            width={28}
-                            height={28}
-                            alt={`${item.name}`}
-                          />
+                          <Avatar>
+                            <AvatarImage
+                              src={item.image ?? '/fallback/fallback.png'}
+                              width={28}
+                              height={28}
+                              alt={`${item.name}`}
+                            />
                             <AvatarFallback className="bg-primary">
                               <FaUser className="text-primary-foreground w-4 h-4" />
                             </AvatarFallback>
-      
-                        </Avatar>
-                          <p className='ml-2'>{item.name}</p>
+                          </Avatar>
+                          <p className="ml-2">{item.name}</p>
                         </div>
                       </td>
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">

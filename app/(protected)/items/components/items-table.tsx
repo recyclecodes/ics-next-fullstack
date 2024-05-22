@@ -1,9 +1,10 @@
-import Image from 'next/image';
 import { FaUser } from 'react-icons/fa';
 import { fetchFilteredItems } from '@/data/items/fetch-filtered-items';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DeleteItem } from './buttons';
 import { formatDateToLocal } from '@/lib/utils';
+import { supabase } from '@/lib/supabase';
+
 
 export default async function ItemsTable({
   query,
@@ -15,6 +16,22 @@ export default async function ItemsTable({
   userId: string;
 }) {
   const items = await fetchFilteredItems(query, currentPage, userId);
+
+
+  // supabase
+  // .channel("realtime items")
+  // .on(
+  //   "postgres_changes",
+  //   {
+  //     event: "*",
+  //     schema: "public",
+  //     table: "Item",
+  //   },
+  //   (payload: any) => {
+  //     console.log(payload)
+  //   }
+  // )
+  // .subscribe();
 
   return (
     <div className="mt-6 flow-root">
@@ -108,7 +125,7 @@ export default async function ItemsTable({
                             </AvatarFallback>
       
                         </Avatar>
-                          <p className='ml-2'>{item.name}</p>
+                          <div className='ml-2'>{item.name}</div>
                         </div>
                       </td>
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
@@ -129,7 +146,7 @@ export default async function ItemsTable({
                 </tbody>
               </>
             ) : (
-              <p className="text-center text-primary py-4">No data found</p>
+              <div className="text-center text-primary py-4">No data found</div>
             )}
           </table>
         </div>

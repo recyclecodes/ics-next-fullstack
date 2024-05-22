@@ -23,6 +23,8 @@ import ImageUpload from '@/components/ui/image-upload';
 import { useCurrentUser } from '@/hooks/use-current-user';
 import { createItem } from '@/actions/items/create-item';
 import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
 
 export const CreateItemForm = () => {
   const [error, setError] = useState<string | undefined>('');
@@ -32,6 +34,7 @@ export const CreateItemForm = () => {
 
   const user = useCurrentUser();
   const userId = user?.id ?? '';
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof ItemSchema>>({
     resolver: zodResolver(ItemSchema),
@@ -45,6 +48,21 @@ export const CreateItemForm = () => {
       userId: userId,
     },
   });
+
+  supabase
+    .channel('realtime items')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'Item',
+      },
+      (payload: any) => {
+        router.refresh();
+      }
+    )
+    .subscribe();
 
   const onSubmit = (values: z.infer<typeof ItemSchema>) => {
     setError('');
@@ -62,7 +80,7 @@ export const CreateItemForm = () => {
     //       : values.quantity,
     // };
 
-    console.log(user);
+    // console.log(user);
     // console.log(convertedValues);
 
     startTransition(() => {
@@ -72,7 +90,7 @@ export const CreateItemForm = () => {
         setSuccess(data?.success);
 
         if (!data?.error) {
-          form.reset(); 
+          form.reset();
         }
       });
     });
@@ -207,13 +225,13 @@ export const CreateItemForm = () => {
           <FormSuccess message={success} />
           <div className="mt-6 md:flex block justify-center items-center gap-4 space-y-4 md:space-y-0">
             <div className="w-full">
-              <Button disabled={isPending} type="submit" className='w-full'>
+              <Button disabled={isPending} type="submit" className="w-full">
                 Submit
               </Button>
             </div>
 
             <div className="w-full">
-              <Button variant="secondary" className='w-full'>
+              <Button variant="secondary" className="w-full">
                 <Link href="/items">Cancel</Link>
               </Button>
             </div>

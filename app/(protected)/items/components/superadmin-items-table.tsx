@@ -105,12 +105,12 @@ export default async function SuperadminItemsTable({
                               <FaUser className="text-primary-foreground w-4 h-4" />
                             </AvatarFallback>
                           </Avatar>
-                          <p className="ml-2 flex flex-col">
+                          <div className="ml-2 flex flex-col">
                           {item.name}
                           <span className="text-xs text-muted-foreground">
                             {item.brand}
                           </span>
-                        </p>
+                        </div>
                         </div>
                       </td>
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
@@ -131,7 +131,7 @@ export default async function SuperadminItemsTable({
                 </tbody>
               </>
             ) : (
-              <p className="text-center text-primary py-4">No data found</p>
+              <div className="text-center text-primary py-4">No data found</div>
             )}
           </table>
         </div>

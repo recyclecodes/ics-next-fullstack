@@ -38,6 +38,9 @@ import {
   getCurrentUserCompany,
   getUserItems,
 } from '@/data/user';
+import useFCMToken from '@/hooks/use-fcm-token';
+import { saveFcmToken } from '@/actions/notifications/save-fcm-token';
+
 
 export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
   const [selectedCompany, setSelectedCompany] = useState<string>('');
@@ -53,6 +56,7 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
   const user = useCurrentUser();
   const senderId = user?.id ?? '';
   const adminId = adminUser?.id ?? '';
+  const fcmToken = useFCMToken();
 
   useEffect(() => {
     if (senderId) {
@@ -163,13 +167,16 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
       const result = await initiateTransfer({
         senderCompanyId,
         senderId,
-        adminId, // This is now the admin of the sender company
+        adminId,
         image: values.image,
         recipientCompanyId: selectedCompany,
         recipientId: selectedUser,
         status: 'PENDING',
         items: validItems.map(item => item.id),
       });
+      if (fcmToken) {
+        await saveFcmToken(senderId, fcmToken);
+      }
       setError(result?.errors);
       setSuccess(result?.success);
     } catch (error) {

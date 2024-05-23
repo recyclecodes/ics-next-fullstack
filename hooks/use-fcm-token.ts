@@ -1,45 +1,31 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { getMessaging, getToken } from 'firebase/messaging';
-import firebaseApp from '@/firebase';
+"use client";
+import { useEffect, useState } from "react";
+import { getToken, isSupported } from "firebase/messaging";
+import useNotificationPermission from "./use-notification-permission";
+import { messaging } from "@/utils/firebase";
 
-const useFcmToken = () => {
-  const [token, setToken] = useState('');
-  const [notificationPermissionStatus, setNotificationPermissionStatus] =
-    useState('');
+
+const useFCMToken = () => {
+  const permission = useNotificationPermission();
+  const [fcmToken, setFcmToken] = useState<string | null>(null);
 
   useEffect(() => {
     const retrieveToken = async () => {
-      try {
-        if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-          const messaging = getMessaging(firebaseApp);
-
-          // Request notification permission
-          const permission = await Notification.requestPermission();
-          setNotificationPermissionStatus(permission);
-
-          if (permission === 'granted') {
-            const currentToken = await getToken(messaging, {
-              vapidKey: 'I89k0oFV9OWxt9pSqgYM6FTViB-kKRmlCeO-WICk6ZA', // Replace with your Firebase project's VAPID key
-            });
-            if (currentToken) {
-              setToken(currentToken);
-            } else {
-              console.log(
-                'No registration token available. Request permission to generate one.'
-              );
-            }
-          }
+      if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+        if (permission === "granted") {
+          const isFCMSupported = await isSupported();
+          if (!isFCMSupported) return;
+          const fcmToken = await getToken(messaging(), {
+            vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
+          });
+          setFcmToken(fcmToken);
         }
-      } catch (error) {
-        console.log('Error retrieving token:', error);
       }
     };
-
     retrieveToken();
-  }, []);
+  }, [permission]);
 
-  return { fcmToken: token, notificationPermissionStatus };
+  return fcmToken;
 };
 
-export default useFcmToken;
+export default useFCMToken;

@@ -182,5 +182,6 @@ model Notification {
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 
+   @@unique([userId, fcmToken])
   @@index([userId, createdAt])
 }

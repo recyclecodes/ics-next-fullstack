@@ -170,15 +170,17 @@ enum TransferStatus {
 }
 
 model Notification {
-  id          String   @id @default(cuid())
-  title       String
-  body        String
-  data        Json?
-  userId      String
-  user        User     @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
-  readAt      DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id               String    @id @default(cuid())
+  title            String
+  body             String
+  data             Json?
+  userId           String
+  user             User      @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
+  readAt           DateTime?
+  fcmToken         String?
+  notificationType String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
   @@index([userId, createdAt])
 }

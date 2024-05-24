@@ -41,7 +41,6 @@ import {
 import useFCMToken from '@/hooks/use-fcm-token';
 import { saveFcmToken } from '@/actions/notifications/save-fcm-token';
 
-
 export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
   const [selectedCompany, setSelectedCompany] = useState<string>('');
   const [senderCompanyId, setSenderCompanyId] = useState<string>('');
@@ -104,11 +103,16 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
     }
   };
 
-  const fetchCompanyUsers = async (companyId: string, currentUserId: string) => {
+  const fetchCompanyUsers = async (
+    companyId: string,
+    currentUserId: string
+  ) => {
     try {
       const companyWithUsers = await getCompanyWithUsersById(companyId);
       if (companyWithUsers) {
-        const users = companyWithUsers.users.filter(user => user.id !== currentUserId);
+        const users = companyWithUsers.users.filter(
+          (user) => user.id !== currentUserId
+        );
         setCompanyUsers(users);
       } else {
         setCompanyUsers([]);
@@ -156,7 +160,9 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
       return;
     }
 
-    const validItems = userItems.filter(item => values.items.includes(item.id));
+    const validItems = userItems.filter((item) =>
+      values.items.includes(item.id)
+    );
 
     if (validItems.length !== values.items.length) {
       setError('One or more selected items do not exist');
@@ -172,11 +178,8 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
         recipientCompanyId: selectedCompany,
         recipientId: selectedUser,
         status: 'PENDING',
-        items: validItems.map(item => item.id),
+        items: validItems.map((item) => item.id),
       });
-      if (fcmToken) {
-        await saveFcmToken(senderId, fcmToken);
-      }
       setError(result?.errors);
       setSuccess(result?.success);
     } catch (error) {
@@ -202,17 +205,20 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
                   <FormLabel>Choose Item to Transfer</FormLabel>
                   <FormControl>
                     <Select
-                      onValueChange={value => field.onChange([value])}
+                      onValueChange={(value) => field.onChange([value])}
                       value={field.value[0] ?? ''}
                       defaultValue={field.value[0] ?? ''}
                     >
                       <SelectTrigger className="w-full">
-                        <SelectValue defaultValue={field.value} placeholder="Select an Item" />
+                        <SelectValue
+                          defaultValue={field.value}
+                          placeholder="Select an Item"
+                        />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>Item</SelectLabel>
-                          {userItems.map(item => (
+                          {userItems.map((item) => (
                             <SelectItem key={item.id} value={item.id}>
                               {item.name}
                             </SelectItem>
@@ -234,7 +240,7 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
                   <FormControl>
                     <ImageUpload
                       value={field.value ? [field.value] : []}
-                      onChange={url => field.onChange(url)}
+                      onChange={(url) => field.onChange(url)}
                       onRemove={() => field.onChange('')}
                     />
                   </FormControl>
@@ -250,7 +256,7 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
                   <FormLabel>Choose Recipient Company</FormLabel>
                   <FormControl>
                     <Select
-                      onValueChange={value => {
+                      onValueChange={(value) => {
                         field.onChange(value);
                         setSelectedCompany(value);
                       }}
@@ -258,12 +264,15 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
                       defaultValue={field.value}
                     >
                       <SelectTrigger className="w-full">
-                        <SelectValue defaultValue={field.value} placeholder="Select a company" />
+                        <SelectValue
+                          defaultValue={field.value}
+                          placeholder="Select a company"
+                        />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>Company</SelectLabel>
-                          {companies.map(company => (
+                          {companies.map((company) => (
                             <SelectItem key={company.id} value={company.id}>
                               {company.name}
                             </SelectItem>
@@ -284,7 +293,7 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
                   <FormLabel>Choose Recipient User</FormLabel>
                   <FormControl>
                     <Select
-                      onValueChange={value => {
+                      onValueChange={(value) => {
                         field.onChange(value);
                         setSelectedUser(value);
                       }}
@@ -292,12 +301,15 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
                       defaultValue={field.value}
                     >
                       <SelectTrigger className="w-full">
-                        <SelectValue defaultValue={field.value} placeholder="Select a user" />
+                        <SelectValue
+                          defaultValue={field.value}
+                          placeholder="Select a user"
+                        />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>User</SelectLabel>
-                          {companyUsers.map(user => (
+                          {companyUsers.map((user) => (
                             <SelectItem key={user.id} value={user.id}>
                               {user.name}
                             </SelectItem>

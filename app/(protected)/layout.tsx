@@ -1,6 +1,7 @@
 import { UserButton } from '@/components/auth/user-button';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { MainNav } from './_components/main-nav';
+import NotificationBadge from '@/components/notifications';
 
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
@@ -12,6 +13,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           <MainNav />
 
           <div className="ml-auto flex items-center space-x-4">
+            <NotificationBadge/>
             <ThemeToggle />
             <UserButton />
           </div>

@@ -6,7 +6,6 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DeleteItem } from './buttons';
 import { formatDateToLocal } from '@/lib/utils';
-import { supabase } from '@/lib/supabase';
 
 
 export default async function AdminItemsTable({
@@ -24,21 +23,6 @@ export default async function AdminItemsTable({
     currentUserCompanyId
   );
 
-
-//  supabase
-//   .channel("realtime items")
-//   .on(
-//     "postgres_changes",
-//     {
-//       event: "*",
-//       schema: "public",
-//       table: "Item",
-//     },
-//     (payload) => {
-//       console.log(payload)
-//     }
-//   )
-//   .subscribe();
 
   return (
     <div className="mt-6 flow-root">

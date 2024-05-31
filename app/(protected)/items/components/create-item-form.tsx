@@ -3,7 +3,7 @@
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 
 import {
   Form,
@@ -25,10 +25,12 @@ import { createItem } from '@/actions/items/create-item';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/use-toast';
 
 export const CreateItemForm = () => {
   const [error, setError] = useState<string | undefined>('');
   const [success, setSuccess] = useState<string | undefined>('');
+  const { toast } = useToast();
 
   const [isPending, startTransition] = useTransition();
 
@@ -49,48 +51,60 @@ export const CreateItemForm = () => {
     },
   });
 
-  supabase
-    .channel('realtime items')
-    .on(
-      'postgres_changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'Item',
-      },
-      (payload: any) => {
-        router.refresh();
-      }
-    )
-    .subscribe();
+  useEffect(() => {
+    const subscription = supabase
+      .channel('realtime:item notifications')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'notifications' },
+        (payload) => {
+          const newNotification = payload.new;
+          if (newNotification.userId !== userId) {
+            toast({
+              variant: 'default',
+              title: newNotification.title,
+              description: newNotification.body,
+            });
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'Item',
+        },
+        (payload: any) => {
+          router.refresh();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(subscription);
+    };
+  }, [userId, toast, router]);
 
   const onSubmit = (values: z.infer<typeof ItemSchema>) => {
     setError('');
     setSuccess('');
 
-    // const convertedValues = {
-    //   ...values,
-    //   price:
-    //     typeof values.price === 'string'
-    //       ? parseFloat(values.price)
-    //       : values.price,
-    //   quantity:
-    //     typeof values.quantity === 'string'
-    //       ? parseFloat(values.quantity)
-    //       : values.quantity,
-    // };
-
-    // console.log(user);
-    // console.log(convertedValues);
-
     startTransition(() => {
       createItem({ ...values }).then((data) => {
-        console.log(userId);
         setError(data?.error);
         setSuccess(data?.success);
 
         if (!data?.error) {
           form.reset();
+          // Trigger toast notification
+          if (data?.notification) {
+            toast({
+              variant: 'default',
+              title: data.notification.title,
+              description: data.notification.body,
+            });
+          }
         }
       });
     });

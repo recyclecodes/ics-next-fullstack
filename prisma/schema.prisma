@@ -53,6 +53,7 @@ model User {
   recipientTransfer     Transfer[]             @relation("TransferToUser")
   adminTransfer         Transfer[]             @relation("TransferApprovedByAdmin")
   notifications         Notification[]         @relation("UserNotifications")
+  fcmToken              String?
 
   // adminUser   User?   @relation("UserToAdmin", fields: [adminUserId], references: [id])
   // adminUserId String?
@@ -147,6 +148,7 @@ model Transfer {
   id                 String         @id @default(uuid())
   senderId           String
   image              String?
+  remarks            String?
   sender             User           @relation("TransferFromSender", fields: [senderId], references: [id])
   recipientId        String
   recipient          User           @relation("TransferToUser", fields: [recipientId], references: [id])
@@ -182,6 +184,6 @@ model Notification {
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 
-   @@unique([userId, fcmToken])
+  @@unique([userId, fcmToken])
   @@index([userId, createdAt])
 }

@@ -1,7 +1,7 @@
 import { unstable_noStore as noStore } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 5;
 export async function fetchItemsPages(query: string): Promise<number> {
   noStore();
   try {

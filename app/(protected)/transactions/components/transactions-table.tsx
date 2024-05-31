@@ -5,6 +5,12 @@ import { Badge } from '@/components/ui/badge';
 import { ApproveTransaction, RejectTransaction } from './buttons';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FaUser } from 'react-icons/fa';
+import { Icons } from '@/components/ui/icons';
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '@/components/ui/hover-card';
 
 export default async function TransactionsTable({
   query,
@@ -112,26 +118,40 @@ export default async function TransactionsTable({
                           <span className="text-xs text-muted-foreground">
                             {item.brand}
                           </span>
-                          <Badge
-                            className="rounded-lg py-1 justify-center text-xs h-8"
-                            variant={
-                              transaction?.status === 'DECLINED'
-                                ? 'destructive'
+                          <div className="flex items-center">
+                            <Badge
+                              className="rounded-lg py-1 justify-center text-xs h-8"
+                              variant={
+                                transaction?.status === 'DECLINED'
+                                  ? 'destructive'
+                                  : transaction?.status === 'ACCEPTED'
+                                  ? 'success'
+                                  : transaction?.status === 'APPROVED'
+                                  ? 'progress'
+                                  : 'pending'
+                              }
+                            >
+                              {transaction?.status === 'APPROVED'
+                                ? 'IN PROGRESS'
+                                : transaction?.status === 'DECLINED'
+                                ? 'DECLINED'
                                 : transaction?.status === 'ACCEPTED'
-                                ? 'success'
-                                : transaction?.status === 'APPROVED'
-                                ? 'progress'
-                                : 'pending'
-                            }
-                          >
-                            {transaction?.status === 'APPROVED'
-                              ? 'IN PROGRESS'
-                              : transaction?.status === 'DECLINED'
-                              ? 'DECLINED'
-                              : transaction?.status === 'ACCEPTED'
-                              ? 'DELIVERED'
-                              : 'PENDING'}
-                          </Badge>
+                                ? 'DELIVERED'
+                                : 'PENDING'}
+                            </Badge>
+                            {transaction?.status === 'DECLINED' && (
+                              <HoverCard>
+                                <HoverCardTrigger>
+                                  <Icons.question className="ml-3 h-5 w-5 cursor-pointer" />
+                                </HoverCardTrigger>
+                                <HoverCardContent>
+                                  <p className="text-sm">
+                                    {transaction.remarks}
+                                  </p>
+                                </HoverCardContent>
+                              </HoverCard>
+                            )}
+                          </div>
                         </div>
                       </div>
                     ))}

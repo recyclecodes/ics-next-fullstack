@@ -12,6 +12,18 @@ import { useToast } from '@/components/ui/use-toast';
 import { approveTransfer } from '@/actions/transfers/approve-transfer';
 import { rejectTransfer } from '@/actions/transfers/reject-transfer';
 import { useState, useTransition } from 'react';
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { acceptTransfer } from '@/actions/transfers/accept-transfer';
 
 export function CreateTransaction() {
@@ -59,13 +71,15 @@ export function ApproveTransaction({ id }: { id: string }) {
 
 export function RejectTransaction({ id }: { id: string }) {
   const { toast } = useToast();
+  const [remarks, setRemarks] = useState('');
 
-  const rejectTransaction = async () => {
+  const rejectTransaction = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
-      await rejectTransfer(id);
+      const result = await rejectTransfer(id, remarks);
       toast({
         variant: 'default',
-        description: `Successfully rejected transaction`,
+        description: result.message,
       });
     } catch (error) {
       console.error(
@@ -78,14 +92,41 @@ export function RejectTransaction({ id }: { id: string }) {
       });
     }
   };
+
   return (
-    <form action={rejectTransaction}>
-      <Button variant="secondary" className="gap-2 w-full">
-        <span className="sr-only">Decline</span>
-        <ImCross className="w-5" />
-        Decline
-      </Button>
-    </form>
+    <Sheet>
+      <SheetTrigger>
+        <Button variant="secondary" className="gap-2 w-full">
+          <span className="sr-only">Decline</span>
+          <ImCross className="w-5" />
+          Decline
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="bottom">
+        <SheetHeader>
+          <SheetTitle>Decline Transfer</SheetTitle>
+        </SheetHeader>
+        <form onSubmit={rejectTransaction} className="flex flex-col gap-4 p-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+            <Label htmlFor="remarks" className="hidden sm:block text-right sm:w-1/4">
+              Remarks
+            </Label>
+            <Input
+              id="remarks"
+              value={remarks}
+              onChange={(e) => setRemarks(e.target.value)}
+              className="flex-1"
+              placeholder="Enter remarks"
+            />
+          </div>
+          <SheetFooter className="flex justify-end gap-4">
+            <SheetClose asChild>
+              <Button type="submit">Submit</Button>
+            </SheetClose>
+          </SheetFooter>
+        </form>
+      </SheetContent>
+    </Sheet>
   );
 }
 

@@ -55,7 +55,7 @@ export function MainNav({
     },
     {
       href: `/transactions`,
-      label: 'Transactions',
+      label: 'Transfers',
       icon: <RiFileTransferFill className="h-5 w-5 mr-5 text-primary" />,
       active: pathname === `/transactions`,
     },
@@ -75,7 +75,7 @@ export function MainNav({
     },
     {
       href: `/transactions`,
-      label: 'Transactions',
+      label: 'Transfers',
       icon: <RiFileTransferFill className="h-5 w-5 mr-5 text-primary" />,
       active: pathname === `/transactions`,
     },
@@ -101,7 +101,7 @@ export function MainNav({
     },
     {
       href: `/transactions`,
-      label: 'Transactions',
+      label: 'Transfers',
       icon: <RiFileTransferFill className="h-5 w-5 mr-5 text-primary" />,
       active: pathname === `/transactions`,
     },

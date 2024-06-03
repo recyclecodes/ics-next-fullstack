@@ -18,7 +18,7 @@ import SuperadminTransactionsTable from './components/superadmin-transactions-ta
 import { Heading } from '@/components/ui/heading';
 
 export const metadata: Metadata = {
-  title: 'ICS | Transactions',
+  title: 'ICS | Transfers',
 };
 
 export default async function TransactionsPage({
@@ -42,10 +42,10 @@ export default async function TransactionsPage({
   return (
     <div className="w-full">
       <div className="flex w-full items-center justify-between">
-        <Heading title="Transactions" description="List of transactions" />
+        <Heading title="Transfers" description="List of transfers" />
       </div>
       <div className="flex items-center justify-between gap-2 md:mt-4">
-        <Search placeholder="Search Transactions..." />
+        <Search placeholder="Search Transfers..." />
         <CreateTransaction />
       </div>
       <Suspense key={query + currentPage} fallback={''}>

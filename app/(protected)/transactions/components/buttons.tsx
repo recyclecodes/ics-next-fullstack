@@ -30,7 +30,7 @@ export function CreateTransaction() {
   return (
     <Link href="/transactions/create">
       <Button className="flex">
-        <div className="hidden md:block">Create Transactions</div>
+        <div className="hidden md:block">Initiate Transfer</div>
         <FaPlus className="h-5 md:ml-4" />
       </Button>
     </Link>

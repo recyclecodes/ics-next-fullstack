@@ -175,7 +175,7 @@ export default async function TransactionsTable({
             </p>
           )}
 
-          <table className="hidden min-w-full md:table">
+          <table className="hidden md:container md:table">
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
@@ -185,7 +185,7 @@ export default async function TransactionsTable({
                   Item
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Recipient
+                  Reciever
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Status
@@ -195,7 +195,7 @@ export default async function TransactionsTable({
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-secondary">
+            <tbody className="bg-background">
               {transactions?.map((transaction) => (
                 <tr key={transaction.id}>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">

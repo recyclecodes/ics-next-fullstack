@@ -54,9 +54,11 @@ export const LoginForm = () => {
       login(values)
         .then((data) => {
           if (data?.error) {
-            form.reset();
-            setError(data.error);
-          }
+            if (!showTwoFactor) { 
+                form.reset()
+            }
+            setError(data.error) 
+        }
           if (data?.success) {
             update();
             form.reset();

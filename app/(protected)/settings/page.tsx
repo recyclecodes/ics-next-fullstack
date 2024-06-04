@@ -34,6 +34,7 @@ import { FormSuccess } from "@/components/form-success";
 import { FormError } from "@/components/form-error";
 import { UserRole } from "@prisma/client";
 import { Switch } from "@/components/ui/switch";
+import ImageUpload from "@/components/ui/image-upload";
 
 const SettingsPage = () => {
   const user = useCurrentUser();
@@ -46,12 +47,13 @@ const SettingsPage = () => {
   const form = useForm<z.infer<typeof SettingsSchema>>({
     resolver: zodResolver(SettingsSchema),
     defaultValues: {
-      password:  undefined,
+      password: undefined,
       newPassword: undefined,
+      image: user?.image || undefined,
       name: user?.name || undefined,
       email: user?.email || undefined,
       role: user?.role || undefined,
-      isTwoFactorEnabled: !!(user?.isTwoFactorEnabled) || undefined // Double negation for conversion
+      isTwoFactorEnabled: !!user?.isTwoFactorEnabled || undefined, // Double negation for conversion
     },
   });
 
@@ -73,10 +75,9 @@ const SettingsPage = () => {
   };
 
   return (
-    
     <Card className="w-full">
       <CardHeader>
-        <p className="text-2xl font-semibold text-center">Settings</p>
+        <p className="text-center text-2xl font-semibold">Settings</p>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -90,13 +91,30 @@ const SettingsPage = () => {
                     <FormLabel>Name</FormLabel>
                     <FormControl>
                       <Input
-                      type="text"
+                        type="text"
                         disabled={isPending}
                         placeholder="John Doe"
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage /> 
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <FormItem className="mb-4">
+                    <FormLabel>User Image</FormLabel>
+                    <FormControl>
+                      <ImageUpload
+                        value={field.value ? [field.value] : []}
+                        onChange={(url) => field.onChange(url)}
+                        onRemove={() => field.onChange("")}
+                      />
+                    </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />

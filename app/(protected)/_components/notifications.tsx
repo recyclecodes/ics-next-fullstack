@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,9 +6,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu';
-import { Icons } from '@/components/ui/icons';
-import { fetchNotifications } from '@/data/notifications/fetch-notification-by-user';
+} from "@/components/ui/dropdown-menu";
+import { Icons } from "@/components/ui/icons";
+import { fetchNotifications } from "@/data/notifications/fetch-notification-by-user";
 
 export default async function Notifications() {
   //   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -35,7 +35,7 @@ export default async function Notifications() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="border-0 rounded-full">
+        <Button variant="outline" className="rounded-full border-0">
           {/* {notifications?.length} */}
           <Icons.bell className="h-4 w-4" />
         </Button>

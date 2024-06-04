@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import * as z from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useState, useTransition } from 'react';
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useTransition } from "react";
 
-import { CardWrapper } from '@/components/auth/card-wrapper';
-import { RegisterSchema } from '@/schemas';
+import { CardWrapper } from "@/components/auth/card-wrapper";
+import { RegisterSchema } from "@/schemas";
 import {
   Form,
   FormControl,
@@ -14,31 +14,31 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { FormError } from '@/components/form-error';
-import { FormSuccess } from '@/components/form-success';
-import { register } from '@/actions/register';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
+import { register } from "@/actions/register";
 
 export const RegisterForm = () => {
-  const [error, setError] = useState<string | undefined>('');
-  const [success, setSuccess] = useState<string | undefined>('');
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
 
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
-      email: '',
-      password: '',
-      name: '',
+      email: "",
+      password: "",
+      name: "",
     },
   });
 
   const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
     startTransition(() => {
       register(values).then((data) => {
@@ -46,6 +46,7 @@ export const RegisterForm = () => {
         setSuccess(data.success);
       });
     });
+    form.reset();
   };
 
   return (
@@ -58,7 +59,7 @@ export const RegisterForm = () => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-4">
-          <FormField
+            <FormField
               control={form.control}
               name="name"
               render={({ field }) => (

@@ -15,7 +15,12 @@ export const getUserByEmail = async (email: string) => {
 
 export const getUserById = async (id: any) => {
   try {
-    const user = await prisma.user.findUnique({ where: { id } });
+    const user = await prisma.user.findUnique({
+      where: { id },
+      include: {
+        company: true,
+      },
+    });
 
     return user;
   } catch (error) {
@@ -69,7 +74,6 @@ export const getCurrentUserCompanyId = async (userId: string) => {
       },
     });
 
-
     return userWithCompany;
   } catch (error) {
     console.error('Error fetching company of current user:', error);
@@ -110,14 +114,14 @@ export const getUserItems = async (userId: string) => {
   }
 };
 
-
 interface UserWithSender {
   id: string;
-  senderTransfer: any[]; 
+  senderTransfer: any[];
 }
 
-
-export const getUserWithSender = async (userId: string): Promise<UserWithSender | null> => {
+export const getUserWithSender = async (
+  userId: string
+): Promise<UserWithSender | null> => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -126,7 +130,7 @@ export const getUserWithSender = async (userId: string): Promise<UserWithSender 
       },
     });
     console.log(user);
-    return user as UserWithSender; 
+    return user as UserWithSender;
   } catch (error) {
     console.error('Error fetching user:', error);
     return null;
@@ -135,11 +139,12 @@ export const getUserWithSender = async (userId: string): Promise<UserWithSender 
 
 interface UserWithRecipient {
   id: string;
-  recipientTransfer: any[]; 
+  recipientTransfer: any[];
 }
 
-
-export const getUserWithRecipient = async (userId: string): Promise<UserWithRecipient | null> => {
+export const getUserWithRecipient = async (
+  userId: string
+): Promise<UserWithRecipient | null> => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -153,4 +158,3 @@ export const getUserWithRecipient = async (userId: string): Promise<UserWithReci
     return null;
   }
 };
-

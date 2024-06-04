@@ -6,6 +6,7 @@ import { getUserById } from '@/data/user';
 import { UserRole } from '@prisma/client';
 import { getTwoFactorConfirmationByUserId } from '@/data/two-factor-confirmation';
 import { getAccountByUserId } from './data/account';
+import { ExtendedUser } from './next-auth';
 
 export const {
   handlers: { GET, POST },
@@ -30,31 +31,27 @@ export const {
     async signIn({ user, account }) {
       if (account?.provider !== 'credentials') return true;
 
+      const existingUser = await getUserById(user.id);
 
-        const existingUser = await getUserById(user.id);
+      if (!existingUser?.emailVerified) return false;
 
-        if (!existingUser?.emailVerified) return false;
+      if (existingUser.isTwoFactorEnabled) {
+        const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
+          existingUser.id
+        );
 
-        if (existingUser.isTwoFactorEnabled) {
-          const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
-            existingUser.id
-          );
+        if (!twoFactorConfirmation) return false;
 
-          // console.log({ twoFactorConfirmation });
-
-          if (!twoFactorConfirmation) return false;
-
-          await prisma.twoFactorConfirmation.deleteMany({
-            where: { id: twoFactorConfirmation.id },
-          });
-        }
-      
+        await prisma.twoFactorConfirmation.deleteMany({
+          where: { id: twoFactorConfirmation.id },
+        });
+      }
 
       return true;
     },
     async session({ token, session }) {
       console.log({ sessionToken: token });
-      
+
       if (token.sub && session.user) {
         session.user.id = token.sub;
       }
@@ -71,6 +68,7 @@ export const {
         session.user.name = token.name;
         session.user.email = token.email as string;
         session.user.isOAuth = token.isOAuth as boolean;
+        session.user.company = token.company as ExtendedUser['company'];
       }
 
       return session;
@@ -90,6 +88,16 @@ export const {
       token.email = existingUser.email;
       token.role = existingUser.role;
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
+      token.company = existingUser.company
+        ? {
+            id: existingUser.company.id,
+            name: existingUser.company.name,
+            image: existingUser.company.image,
+            deletedAt: existingUser.company.deletedAt,
+            createdAt: existingUser.company.createdAt,
+            updatedAt: existingUser.company.updatedAt,
+          }
+        : undefined;
 
       return token;
     },

@@ -25,7 +25,7 @@ export default async function SuperadminItemsTable({
                   key={item.id}
                   className="mb-2 w-full rounded-md bg-background p-4"
                 >
-                  <div className="flex items-center justify-between border-b pb-4">
+                  <div className="flex items-center justify-between border-b pb-4"> 
                     <div>
                       <div className="mb-2 flex items-center">
                         <Avatar>

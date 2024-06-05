@@ -1,10 +1,9 @@
-import { FaUser } from 'react-icons/fa';
-import { fetchFilteredItems } from '@/data/items/fetch-filtered-items';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { DeleteItem } from './buttons';
-import { formatDateToLocal } from '@/lib/utils';
-import { supabase } from '@/lib/supabase';
-
+import { FaUser } from "react-icons/fa";
+import { fetchFilteredItems } from "@/data/items/fetch-filtered-items";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DeleteItem } from "./buttons";
+import { formatDateToLocal } from "@/lib/utils";
+import { supabase } from "@/lib/supabase";
 
 export default async function ItemsTable({
   query,
@@ -16,7 +15,6 @@ export default async function ItemsTable({
   userId: string;
 }) {
   const items = await fetchFilteredItems(query, currentPage, userId);
-
 
   // supabase
   // .channel("realtime items")
@@ -49,28 +47,33 @@ export default async function ItemsTable({
                       <div className="mb-2 flex items-center">
                         <Avatar>
                           <AvatarImage
-                            src={item.image ?? '/fallback/fallback.png'}
+                            src={item.image ?? "/fallback/fallback.png"}
                             width={28}
                             height={28}
                             alt={`${item.name}`}
                           />
-                            <AvatarFallback className="bg-primary">
-                              <FaUser className="text-primary-foreground w-4 h-4" />
-                            </AvatarFallback>
+                          <AvatarFallback className="bg-primary">
+                            <FaUser className="h-4 w-4 text-primary-foreground" />
+                          </AvatarFallback>
                         </Avatar>
-                        <p className="ml-2 flex flex-col">{item.name}
-                        <span className="text-xs text-muted-foreground">{item.brand}</span>
+                        <p className="ml-2 flex flex-col">
+                          {item.name}
+                          <span className="text-xs text-muted-foreground">
+                            {item.brand}
+                          </span>
                         </p>
                       </div>
-                      <p className="text-xs text-muted-foreground">{item.brand}</p>
                     </div>
-                    <div className="flex w-full items-center justify-between pt-4">
+                  </div>
+                  <div className="flex w-full items-center justify-between pt-4">
                     <div>
-                      <p className="text-sm font-medium">Date added:</p>
-                      <p className="text-base font-medium">
-                        {formatDateToLocal(item.createdAt.toISOString())}
-                        {}
-                      </p>
+                      <div>
+                        <p className="text-xs font-medium">Date added:</p>
+                        <p className="text-base font-medium">
+                          {formatDateToLocal(item.createdAt.toISOString())}
+                          {}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex justify-end gap-2">
                       {/* <UpdateCompany id={company.id} /> */}
@@ -78,17 +81,15 @@ export default async function ItemsTable({
                       {/* <ViewCompany id={company.id} /> */}
                     </div>
                   </div>
-                    
-                  </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="md:hidden text-primary text-center py-4">
+            <p className="py-4 text-center text-primary md:hidden">
               No data found
             </p>
           )}
-          <table className=" hidden min-w-full md:table">
+          <table className="hidden min-w-full md:table">
             {items && items.length > 0 ? (
               <>
                 <thead className="rounded-lg text-left text-sm font-normal">
@@ -113,19 +114,18 @@ export default async function ItemsTable({
                       <td className="whitespace-nowrap px-3 py-3">{item.id}</td>
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex items-center gap-3">
-                        <Avatar>
-                          <AvatarImage
-                            src={item.image ?? '/fallback/fallback.png'}
-                            width={28}
-                            height={28}
-                            alt={`${item.name}`}
-                          />
+                          <Avatar>
+                            <AvatarImage
+                              src={item.image ?? "/fallback/fallback.png"}
+                              width={28}
+                              height={28}
+                              alt={`${item.name}`}
+                            />
                             <AvatarFallback className="bg-primary">
-                              <FaUser className="text-primary-foreground w-4 h-4" />
+                              <FaUser className="h-4 w-4 text-primary-foreground" />
                             </AvatarFallback>
-      
-                        </Avatar>
-                          <div className='ml-2'>{item.name}</div>
+                          </Avatar>
+                          <div className="ml-2">{item.name}</div>
                         </div>
                       </td>
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
@@ -146,7 +146,7 @@ export default async function ItemsTable({
                 </tbody>
               </>
             ) : (
-              <div className="text-center text-primary py-4">No data found</div>
+              <div className="py-4 text-center text-primary">No data found</div>
             )}
           </table>
         </div>

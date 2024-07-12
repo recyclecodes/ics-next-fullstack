@@ -35,6 +35,8 @@ export function MainNav({
   const user = useCurrentUser();
   const { data: session } = useSession();
   const isSuperAdmin = session?.user?.role === UserRole.SUPERADMIN;
+  const hasCompanyFlag = hasCompany(session);
+  const companyName = hasCompanyFlag ? user?.company?.name : "Item Tracker";
 
   const superadminRoutes = [
     {
@@ -134,12 +136,12 @@ export function MainNav({
                     height={28}
                     alt={`${user?.company?.name}`}
                   />
-                  <AvatarFallback className="bg-primary">
-                    <PiSlackLogoBold className="h-6 w-6 text-gray-700 dark:text-gray-300" />
+                  <AvatarFallback className="bg-primary-foreground">
+                    <PiSlackLogoBold className="h-6 w-6 text-primary" />
                   </AvatarFallback>
                 </Avatar>
                 {/* Item Tracker */}
-                <div>{user?.company?.name}</div>
+                <div>{companyName}</div>
               </SheetTitle>
               <SheetDescription className="text-xs md:text-sm">
                 Empowering seamless item transfers.

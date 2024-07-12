@@ -135,7 +135,7 @@ export default async function SuperadminTransactionsTable({
                         </div>
                       </div>
                     ))}
-                    {transaction.status !== 'ACCEPTED' && (
+                    {/* {transaction.status !== 'ACCEPTED' && (
                       <div className="flex flex-col gap-2 self-end">
                         {transaction.status !== 'APPROVED' && (
                           <ApproveTransaction id={transaction.id} />
@@ -144,7 +144,7 @@ export default async function SuperadminTransactionsTable({
                           <RejectTransaction id={transaction.id} />
                         )}
                       </div>
-                    )}
+                    )} */}
                   </div>
                 </div>
               ))}

@@ -25,6 +25,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { acceptTransfer } from '@/actions/transfers/accept-transfer';
+import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 
 export function CreateTransaction() {
   return (
@@ -39,6 +41,21 @@ export function CreateTransaction() {
 
 export function ApproveTransaction({ id }: { id: string }) {
   const { toast } = useToast();
+  const router = useRouter();
+  supabase
+    .channel("realtime transfer")
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "Transfer",
+      },
+      (payload: any) => {
+        router.refresh();
+      },
+    )
+    .subscribe();
 
   const approveTransaction = async () => {
     try {
@@ -72,6 +89,21 @@ export function ApproveTransaction({ id }: { id: string }) {
 export function RejectTransaction({ id }: { id: string }) {
   const { toast } = useToast();
   const [remarks, setRemarks] = useState('');
+  const router = useRouter();
+  supabase
+    .channel("realtime transfer")
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "Transfer",
+      },
+      (payload: any) => {
+        router.refresh();
+      },
+    )
+    .subscribe();
 
   const rejectTransaction = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -134,6 +166,21 @@ export function AcceptTransaction({ id }: { id: string }) {
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+  const router = useRouter();
+  supabase
+    .channel("realtime transfer")
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "Transfer",
+      },
+      (payload: any) => {
+        router.refresh();
+      },
+    )
+    .subscribe();
 
   const handleApprove = async () => {
     setError(null);

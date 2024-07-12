@@ -1,7 +1,7 @@
-'use server';
+"use server";
 
-import { prisma } from '@/lib/prisma';
-import { UserRole } from '@prisma/client';
+import { prisma } from "@/lib/prisma";
+import { UserRole } from "@prisma/client";
 
 export const getUserByEmail = async (email: string) => {
   try {
@@ -38,7 +38,7 @@ export const getUsersByCompanyId = async (companyId: string) => {
 
     return users;
   } catch (error) {
-    console.error('Error fetching users by company ID:', error);
+    console.error("Error fetching users by company ID:", error);
     return [];
   }
 };
@@ -58,7 +58,7 @@ export const getCurrentUserCompany = async (userId: string) => {
 
     return company;
   } catch (error) {
-    console.error('Error fetching company of current user:', error);
+    console.error("Error fetching company of current user:", error);
     return null;
   }
 };
@@ -76,7 +76,7 @@ export const getCurrentUserCompanyId = async (userId: string) => {
 
     return userWithCompany;
   } catch (error) {
-    console.error('Error fetching company of current user:', error);
+    console.error("Error fetching company of current user:", error);
     return null;
   }
 };
@@ -92,7 +92,7 @@ export const getAdminUserByCompanyId = async (companyId: string) => {
 
     return adminUser;
   } catch (error) {
-    console.error('Error fetching admin user:', error);
+    console.error("Error fetching admin user:", error);
     return null;
   }
 };
@@ -104,12 +104,16 @@ export const getUserItems = async (userId: string) => {
         id: userId,
       },
       include: {
-        items: true,
+        items: {
+          where: {
+            deletedAt: null,
+          },
+        },
       },
     });
     return user;
   } catch (error) {
-    console.error('Error fetching user items:', error);
+    console.error("Error fetching user items:", error);
     return null;
   }
 };
@@ -120,7 +124,7 @@ interface UserWithSender {
 }
 
 export const getUserWithSender = async (
-  userId: string
+  userId: string,
 ): Promise<UserWithSender | null> => {
   try {
     const user = await prisma.user.findUnique({
@@ -132,7 +136,7 @@ export const getUserWithSender = async (
     console.log(user);
     return user as UserWithSender;
   } catch (error) {
-    console.error('Error fetching user:', error);
+    console.error("Error fetching user:", error);
     return null;
   }
 };
@@ -143,7 +147,7 @@ interface UserWithRecipient {
 }
 
 export const getUserWithRecipient = async (
-  userId: string
+  userId: string,
 ): Promise<UserWithRecipient | null> => {
   try {
     const user = await prisma.user.findUnique({
@@ -154,7 +158,7 @@ export const getUserWithRecipient = async (
     });
     return user as UserWithRecipient;
   } catch (error) {
-    console.error('Error fetching user:', error);
+    console.error("Error fetching user:", error);
     return null;
   }
 };

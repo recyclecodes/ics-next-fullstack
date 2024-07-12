@@ -14,6 +14,7 @@ import { Icons } from "@/components/ui/icons";
 import { fetchNotifications } from "@/data/notifications/fetch-notification-by-user";
 import { useSession } from "next-auth/react";
 import { Notification } from "@prisma/client";
+import Link from "next/link";
 
 export default function Notifications() {
   const { data: session } = useSession();
@@ -45,11 +46,22 @@ export default function Notifications() {
     loadNotifications();
   }, [session]);
 
+  const notificationCount = notifications.length;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" className="rounded-full border-0">
+        <Button
+          variant="outline"
+          size="icon"
+          className="relative rounded-full border-0"
+        >
           <Icons.bell className="h-4 w-4" />
+          {notificationCount > 0 && (
+            <span className="absolute right-0 top-0 rounded-full bg-red-500 px-1 text-xs text-white">
+              {notificationCount}
+            </span>
+          )}
         </Button>
       </DropdownMenuTrigger>
 
@@ -58,11 +70,20 @@ export default function Notifications() {
         <DropdownMenuSeparator />
         {loading ? (
           <DropdownMenuItem>Loading...</DropdownMenuItem>
-        ) : notifications.length > 0 ? (
+        ) : notificationCount > 0 ? (
           notifications.map((notification) => (
-            <DropdownMenuItem className="text-xs" key={notification.id}>
-              {notification.body}
-            </DropdownMenuItem>
+            <Link
+              key={notification.id}
+              href={
+                notification.notificationType === "item"
+                  ? "/items"
+                  : "/transactions"
+              }
+            >
+              <DropdownMenuItem className="ml-1 px-1 text-sm">
+                {notification.body}
+              </DropdownMenuItem>
+            </Link>
           ))
         ) : (
           <DropdownMenuItem>No notifications</DropdownMenuItem>

@@ -2,21 +2,22 @@
 
 import { prisma } from "@/lib/prisma";
 import { unstable_noStore as noStore } from "next/cache";
+import { Notification } from "@prisma/client";
 
-const ITEMS_PER_PAGE = 5;
-
-export async function fetchNotifications(userId: string, userRole: string) {
+export async function fetchNotifications(
+  userId: string,
+  userRole: string,
+): Promise<Notification[]> {
   noStore();
 
   try {
-    let notifications;
+    let notifications: Notification[] = [];
 
     if (userRole === "SUPERADMIN") {
       notifications = await prisma.notification.findMany({
         orderBy: {
           createdAt: "desc",
         },
-        take: ITEMS_PER_PAGE,
       });
     } else if (userRole === "ADMIN") {
       notifications = await prisma.notification.findMany({
@@ -40,17 +41,6 @@ export async function fetchNotifications(userId: string, userRole: string) {
         orderBy: {
           createdAt: "desc",
         },
-        take: ITEMS_PER_PAGE,
-      });
-    } else {
-      notifications = await prisma.notification.findMany({
-        where: {
-          userId: userId,
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-        take: ITEMS_PER_PAGE,
       });
     }
 

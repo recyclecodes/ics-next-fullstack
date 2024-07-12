@@ -1,10 +1,9 @@
-'use client';
+"use client";
 
-import * as z from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState, useTransition } from 'react';
-
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState, useTransition } from "react";
 import {
   Form,
   FormControl,
@@ -12,16 +11,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { TransferSchema } from '@/schemas';
-import { FormError } from '@/components/form-error';
-import { FormSuccess } from '@/components/form-success';
-import { Button } from '@/components/ui/button';
-import { Heading } from '@/components/ui/heading';
-import ImageUpload from '@/components/ui/image-upload';
-import { useCurrentUser } from '@/hooks/use-current-user';
-import { initiateTransfer } from '@/actions/transfers/create-transfer';
-
+} from "@/components/ui/form";
+import { TransferSchema } from "@/schemas";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
+import { Button } from "@/components/ui/button";
+import { Heading } from "@/components/ui/heading";
+import ImageUpload from "@/components/ui/image-upload";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { initiateTransfer } from "@/actions/transfers/create-transfer";
 import {
   Select,
   SelectContent,
@@ -30,32 +28,34 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { getCompanyWithUsersById } from '@/data/company';
-import { Company, User, Item } from '@prisma/client';
+} from "@/components/ui/select";
+import { getCompanyWithUsersById } from "@/data/company";
+import { Company, User, Item } from "@prisma/client";
 import {
   getAdminUserByCompanyId,
   getCurrentUserCompany,
   getUserItems,
-} from '@/data/user';
-import useFCMToken from '@/hooks/use-fcm-token';
-import { saveFcmToken } from '@/actions/notifications/save-fcm-token';
+} from "@/data/user";
+import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
+import Link from "next/link";
 
 export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
-  const [selectedCompany, setSelectedCompany] = useState<string>('');
-  const [senderCompanyId, setSenderCompanyId] = useState<string>('');
-  const [selectedUser, setSelectedUser] = useState<string>('');
+  const [selectedCompany, setSelectedCompany] = useState<string>("");
+  const [senderCompanyId, setSenderCompanyId] = useState<string>("");
+  const [selectedUser, setSelectedUser] = useState<string>("");
   const [adminUser, setAdminUser] = useState<User | null>(null);
   const [companyUsers, setCompanyUsers] = useState<User[]>([]);
   const [userItems, setUserItems] = useState<Item[]>([]);
-  const [error, setError] = useState<string | undefined>('');
-  const [success, setSuccess] = useState<string | undefined>('');
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
-
+  const { toast } = useToast();
   const user = useCurrentUser();
-  const senderId = user?.id ?? '';
-  const adminId = adminUser?.id ?? '';
-  const fcmToken = useFCMToken();
+  const senderId = user?.id ?? "";
+  const adminId = adminUser?.id ?? "";
+  const router = useRouter();
 
   useEffect(() => {
     if (senderId) {
@@ -81,6 +81,30 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
     }
   }, [senderId]);
 
+  useEffect(() => {
+    const subscription = supabase
+      .channel("realtime:transfer notifications")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "notifications" },
+        (payload) => {
+          const newNotification = payload.new;
+          if (newNotification.userId !== senderId) {
+            toast({
+              variant: "default",
+              title: newNotification.title,
+              description: newNotification.body,
+            });
+          }
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(subscription);
+    };
+  }, [senderId, toast]);
+
   const fetchCurrentUserCompany = async (userId: string) => {
     try {
       const company = await getCurrentUserCompany(userId);
@@ -89,7 +113,7 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
         setSenderCompanyId(company.id);
       }
     } catch (error) {
-      console.error('Error fetching current user company:', error);
+      console.error("Error fetching current user company:", error);
     }
   };
 
@@ -98,27 +122,27 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
       const adminUser = await getAdminUserByCompanyId(companyId);
       setAdminUser(adminUser);
     } catch (error) {
-      console.error('Error fetching admin user:', error);
+      console.error("Error fetching admin user:", error);
       setAdminUser(null);
     }
   };
 
   const fetchCompanyUsers = async (
     companyId: string,
-    currentUserId: string
+    currentUserId: string,
   ) => {
     try {
       const companyWithUsers = await getCompanyWithUsersById(companyId);
       if (companyWithUsers) {
         const users = companyWithUsers.users.filter(
-          (user) => user.id !== currentUserId
+          (user) => user.id !== currentUserId,
         );
         setCompanyUsers(users);
       } else {
         setCompanyUsers([]);
       }
     } catch (error) {
-      console.error('Error fetching company users:', error);
+      console.error("Error fetching company users:", error);
       setCompanyUsers([]);
     }
   };
@@ -132,7 +156,7 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
         setUserItems([]);
       }
     } catch (error) {
-      console.error('Error fetching user items:', error);
+      console.error("Error fetching user items:", error);
       setUserItems([]);
     }
   };
@@ -140,32 +164,32 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
   const form = useForm<z.infer<typeof TransferSchema>>({
     resolver: zodResolver(TransferSchema),
     defaultValues: {
-      senderCompanyId: '',
-      senderId: '',
-      adminId: '',
-      image: '',
-      recipientId: '',
-      recipientCompanyId: '',
-      status: 'PENDING',
+      senderCompanyId: "",
+      senderId: "",
+      adminId: "",
+      image: "",
+      recipientId: "",
+      recipientCompanyId: "",
+      status: "PENDING",
       items: [],
     },
   });
 
   const onSubmit = async (values: z.infer<typeof TransferSchema>) => {
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
     if (!senderCompanyId || !adminId) {
-      setError('Sender company ID or admin ID is missing');
+      setError("Sender company ID or admin ID is missing");
       return;
     }
 
     const validItems = userItems.filter((item) =>
-      values.items.includes(item.id)
+      values.items.includes(item.id),
     );
 
     if (validItems.length !== values.items.length) {
-      setError('One or more selected items do not exist');
+      setError("One or more selected items do not exist");
       return;
     }
 
@@ -177,13 +201,23 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
         image: values.image,
         recipientCompanyId: selectedCompany,
         recipientId: selectedUser,
-        status: 'PENDING',
+        status: "PENDING",
         items: validItems.map((item) => item.id),
       });
+
       setError(result?.errors);
       setSuccess(result?.success);
+
+      if (result?.notification) {
+        form.reset();
+        toast({
+          variant: "default",
+          title: result.notification.title,
+          description: result.notification.body,
+        });
+      }
     } catch (error) {
-      setError('Error initiating transfer');
+      setError("Error initiating transfer");
       console.error(error);
     }
   };
@@ -206,8 +240,8 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
                   <FormControl>
                     <Select
                       onValueChange={(value) => field.onChange([value])}
-                      value={field.value[0] ?? ''}
-                      defaultValue={field.value[0] ?? ''}
+                      value={field.value[0] ?? ""}
+                      defaultValue={field.value[0] ?? ""}
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue
@@ -241,7 +275,7 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
                     <ImageUpload
                       value={field.value ? [field.value] : []}
                       onChange={(url) => field.onChange(url)}
-                      onRemove={() => field.onChange('')}
+                      onRemove={() => field.onChange("")}
                     />
                   </FormControl>
                   <FormMessage />
@@ -325,10 +359,18 @@ export const CreateTransferForm = ({ companies }: { companies: Company[] }) => {
           </div>
           <FormError message={error} />
           <FormSuccess message={success} />
-          <div className="mt-6 flex justify-end gap-4">
-            <Button disabled={isPending} type="submit">
-              Submit
-            </Button>
+          <div className="mt-6 block items-center justify-center gap-4 space-y-4 md:flex md:space-y-0">
+            <div className="w-full">
+              <Button disabled={isPending} type="submit" className="w-full">
+                Submit
+              </Button>
+            </div>
+
+            <div className="w-full">
+              <Button variant="secondary" className="w-full">
+                <Link href="/transfers">Cancel</Link>
+              </Button>
+            </div>
           </div>
         </form>
       </Form>

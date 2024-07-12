@@ -1,12 +1,12 @@
-import { unstable_noStore as noStore } from 'next/cache';
-import { prisma } from '@/lib/prisma';
+import { unstable_noStore as noStore } from "next/cache";
+import { prisma } from "@/lib/prisma";
 
 const TRANSFERS_PER_PAGE = 10;
 
 export async function fetchTransfersByAdminId(
   query: string,
   currentPage: number,
-  transferId: string
+  transferId: string,
 ) {
   noStore();
   const offset = (currentPage - 1) * TRANSFERS_PER_PAGE;
@@ -15,9 +15,13 @@ export async function fetchTransfersByAdminId(
     const transfers = await prisma.transfer.findMany({
       where: {
         adminId: transferId,
-        OR: [{ items: { some: { name: { contains: query, mode:'insensitive' } } } }],
+        OR: [
+          {
+            items: { some: { name: { contains: query, mode: "insensitive" } } },
+          },
+        ],
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
       take: TRANSFERS_PER_PAGE,
       skip: offset,
       include: {
@@ -31,15 +35,15 @@ export async function fetchTransfersByAdminId(
 
     return transfers;
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('[FETCH_TRANSFERS_BY_ADMIN_ID]>Failed to fetch transfers.');
+    console.error("Database Error:", error);
+    throw new Error("[FETCH_TRANSFERS_BY_ADMIN_ID]>Failed to fetch transfers.");
   }
 }
 
 export async function fetchTransfersBySenderId(
   query: string,
   currentPage: number,
-  transferId: string
+  transferId: string,
 ) {
   noStore();
   const offset = (currentPage - 1) * TRANSFERS_PER_PAGE;
@@ -50,7 +54,7 @@ export async function fetchTransfersBySenderId(
         senderId: transferId,
         OR: [{ items: { some: { name: { contains: query } } } }],
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
       take: TRANSFERS_PER_PAGE,
       skip: offset,
       include: {
@@ -64,15 +68,17 @@ export async function fetchTransfersBySenderId(
 
     return transfers;
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('[FETCH_TRANSFERS_BY_SENDER_ID]>Failed to fetch transfers.');
+    console.error("Database Error:", error);
+    throw new Error(
+      "[FETCH_TRANSFERS_BY_SENDER_ID]>Failed to fetch transfers.",
+    );
   }
 }
 
 export async function fetchTransfersByRecipientId(
   query: string,
   currentPage: number,
-  transferId: string
+  transferId: string,
 ) {
   noStore();
   const offset = (currentPage - 1) * TRANSFERS_PER_PAGE;
@@ -81,12 +87,12 @@ export async function fetchTransfersByRecipientId(
     const transfers = await prisma.transfer.findMany({
       where: {
         status: {
-          not: 'PENDING'
+          not: "PENDING",
         },
         recipientId: transferId,
         OR: [{ items: { some: { name: { contains: query } } } }],
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
       take: TRANSFERS_PER_PAGE,
       skip: offset,
       include: {
@@ -100,8 +106,10 @@ export async function fetchTransfersByRecipientId(
 
     return transfers;
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('[FETCH_TRANSFERS_BY_RECIPIENT_ID]>Failed to fetch transfers.');
+    console.error("Database Error:", error);
+    throw new Error(
+      "[FETCH_TRANSFERS_BY_RECIPIENT_ID]>Failed to fetch transfers.",
+    );
   }
 }
 
@@ -115,9 +123,13 @@ export async function fetchFilteredTransfers(
   try {
     const transfers = await prisma.transfer.findMany({
       where: {
-        OR: [{ items: { some: { name: { contains: query, mode:'insensitive' } } } }],
+        OR: [
+          {
+            items: { some: { name: { contains: query, mode: "insensitive" } } },
+          },
+        ],
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
       take: TRANSFERS_PER_PAGE,
       skip: offset,
       include: {
@@ -131,7 +143,7 @@ export async function fetchFilteredTransfers(
 
     return transfers;
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('[FETCH_TRANSFERS_BY_ADMIN_ID]>Failed to fetch transfers.');
+    console.error("Database Error:", error);
+    throw new Error("[FETCH_TRANSFERS_BY_ADMIN_ID]>Failed to fetch transfers.");
   }
 }

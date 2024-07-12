@@ -1,9 +1,12 @@
-'use server';
-import * as z from 'zod';
-import { prisma } from '@/lib/prisma';
-import { TransferSchema } from '@/schemas';
+"use server";
+import * as z from "zod";
+import { prisma } from "@/lib/prisma";
+import { TransferSchema } from "@/schemas";
+import { supabase } from "@/lib/supabase";
 
-export const initiateTransfer = async (values: z.infer<typeof TransferSchema>) => {
+export const initiateTransfer = async (
+  values: z.infer<typeof TransferSchema>,
+) => {
   try {
     const validatedFields = TransferSchema.safeParse(values);
 
@@ -22,13 +25,12 @@ export const initiateTransfer = async (values: z.infer<typeof TransferSchema>) =
       items,
     } = validatedFields.data;
 
-  
-    const sanitizedSenderId = senderId ?? '';
-    const sanitizedSenderCompanyId = senderCompanyId ?? '';
-    const sanitizedAdminId = adminId ?? '';
+    const sanitizedSenderId = senderId ?? "";
+    const sanitizedSenderCompanyId = senderCompanyId ?? "";
+    const sanitizedAdminId = adminId ?? "";
 
     if (!Array.isArray(items)) {
-      return { errors: 'Items must be an array' };
+      return { errors: "Items must be an array" };
     }
 
     const createdTransfer = await prisma.transfer.create({
@@ -40,8 +42,8 @@ export const initiateTransfer = async (values: z.infer<typeof TransferSchema>) =
         adminId: sanitizedAdminId,
         image,
         status,
-        items: { 
-          connect: items.map(itemId => ({ id: itemId })),
+        items: {
+          connect: items.map((itemId) => ({ id: itemId })),
         },
       },
       include: {
@@ -49,11 +51,31 @@ export const initiateTransfer = async (values: z.infer<typeof TransferSchema>) =
       },
     });
 
-    console.log('Transfer created successfully:', createdTransfer);
+    const createdNotification = await prisma.notification.create({
+      data: {
+        title: "Transfer Initiated",
+        body: `A transfer has been initiated`,
+        userId: sanitizedAdminId,
+        notificationType: "transfer",
+      },
+    });
 
-    return { success: 'Transfer created successfully' };
+    await supabase.from("notifications").insert({
+      title: createdNotification.title,
+      body: createdNotification.body,
+      userId: createdNotification.userId,
+      notificationType: createdNotification.notificationType,
+    });
+
+    console.log("Transfer created successfully:", createdTransfer);
+
+    return {
+      success: "Transfer created successfully",
+      transfer: createdTransfer,
+      notification: createdNotification,
+    };
   } catch (error) {
-    console.error('Error creating transfer:', error);
-    return { errors: 'Database Error: Failed to create transfer' };
+    console.error("Error creating transfer:", error);
+    return { errors: "Database Error: Failed to create transfer" };
   }
 };

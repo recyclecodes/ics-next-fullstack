@@ -51,7 +51,7 @@ export const sendPasswordResetEmail = async (
   email: string,
   token: string,
 ): Promise<void> => {
-  const resetLink = `http://localhost:3001/auth/new-password?token=${token}`;
+  const resetLink = `https://ics-next-fullstack-y43w.vercel.app/auth/new-password?token=${token}`;
   await sendEmail({
     to: email,
     subject: "Reset your password",
@@ -63,7 +63,7 @@ export const sendVerificationEmail = async (
   email: string,
   token: string,
 ): Promise<void> => {
-  const confirmLink = `http://localhost:3001/auth/new-verification?token=${token}`;
+  const confirmLink = `https://ics-next-fullstack-y43w.vercel.app/auth/new-verification?token=${token}`;
   await sendEmail({
     to: email,
     subject: "Confirm your email",
@@ -87,7 +87,7 @@ export const sendVerificationEmailWithPassword = async (
   password: string,
   token: string,
 ): Promise<void> => {
-  const confirmLink = `http://localhost:3001/auth/login`;
+  const confirmLink = `https://ics-next-fullstack-y43w.vercel.app/auth/login`;
   await sendEmail({
     to: email,
     subject: "Account created",
